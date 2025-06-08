@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>monportfolio</title>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="title">OUSSOUKNS</a>
+        <ul class="lien" id="lien">
+            <li><a href="#accueil">Accueil</a></li>
+            <li><a href="#competence">Compétences</a></li>
+            <li><a href="#projet">Projets</a></li>
+            <li><a href="#formation">Formations</a></li>
+            <li><a href="#contact">Contacts</a></li>
+        </ul>
+        <div class="burger" id="burger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+    <div class="hero" id="accueil">
+        <div class="accueil">
+            <br>
+            <h2>Bienvenue sur mon portfolio</h2><br><br>
+            <h1>Je m'appelle <span>OUSSOU KOUAME NORGIL SYMPHORIEN</span>,</h1>
+        </div>
+        <div class="accueil">
+            <h3>un Génie Logiciel, développeur de systèmes, d'applications et sites web performants et intuitifs.</h3>
+        </div>
+        <div class="accueil">
+            <img src="phot.png" alt="Portfolio Image">
+        </div>
+        
+    </div>
+    <!--conmpétence-->
+    <h1 class="titre" id="competence">Mes Compétences</h1>
+    <div class="competence">
+        
+        <div class="cp">
+            <h2 >Langages de programmation</h2>
+            <ul>
+                <li>HTML</li>
+                <li>CSS</li>
+            </ul>
+        </div>
+        <div class="cp">
+            <h2 >Logiciel maîtrisés</h2>
+            <ul>
+                <li>Photoshop</li>
+                <li>Adobe Express</li>
+                <li>Canva</li>
+            </ul>
+        </div>
+        <div class="cp">
+            <h2>Soft skill </h2>
+            <h3>Très bon en communication, Esprit d'équipe, Esprit d'analyse. </h3>
+        </div>
+    </div>
+    <h1 class="titre" id="projet">Mes Projets</h1>
+    <div class="projet">
+        
+        <div class="pj">
+            <h3>Projet1</h3><hr>
+            <img src="image1.jpeg" alt="projet1"><hr>
+            <h4>Sa description:</h4><hr>
+            <p>Technos:</p>
+        </div>
+        <div class="pj">
+            <h3>Projet2</h3><hr>
+            <img src="image1.jpeg" alt="projet1"><hr>
+            <h4>Sa description:</h4><hr>
+            <p>Technos:</p>
+        </div>
+        <div class="pj">
+            <h3>Projet3</h3><hr>
+            <img src="image1.jpeg" alt="projet1"><hr>
+            <h4>Sa description:</h4><hr>
+            <p>Technos:</p>
+        </div>
+        <div class="pj">
+            <h3>Projet4</h3><hr>
+            <img src="image1.jpeg" alt="projet1"><hr>
+            <h4>Sa description:</h4><hr>
+            <p>Technos:</p>
+        </div>
+    </div>
+    <h1 class="titre" id="formation">Mes Formations</h1>
+    <div class="formation">
+        
+        <table border="1" width="100%">
+            <tr>
+                <th>Année</th>
+                <th>Formation</th>
+                <th>Établissement</th>
+            </tr>
+            <tr>
+                <td>2024</td>
+                <td>NEANT</td>
+                <td>NEANT</td>
+            </tr>
+            <tr>
+                <td>2025</td>
+                <td>NEANT</td>
+                <td>NEANT</td>
+            </tr>
+            <tr>
+                <td>2026</td>
+                <td>NEANT</td>
+                <td>NEANT</td>
+            </tr>
+            <tr>
+                <td>2027</td>
+                <td>NEANT</td>
+                <td>NEANT</td>
+            </tr>
+        </table>
+    </div>
+    <h1 class="titre" id="contact">Contactez-moi </h1>
+    <div class="contact">
+        <form action="">
+            <label for="nom">Nom:</label>
+            <input type="text" id="nom" name="nom" required><br>
+            <label for="prenom">Prénom:</label>
+            <input type="text" id="prenom" name="prenom" required><br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+            <label for="message">Messages</label>
+            <textarea id="message" name="message" rows="4" required></textarea><br>
+            <button type="submit" id="messagerie">Envoyez</button>
+        </form>
+    </div>
+    <div class="canaux">
+        <!--lien vers linkedin et github avec des icons--> 
+        <div> <a href="https://www.linkedin.com/in/kouame-oussou/"><img src="https://img.freepik.com/vecteurs-premium/logo-rond-linkedin-isole-fond-blanc_469489-985.jpg?semt=ais_hybrid&w=740" alt="LinkedIn" width="50" height="50"><br>LinkedIn</a></div>
+        <div><a href="https://github.com/000000DI"><img src="https://cdn.pixabay.com/photo/2022/01/30/13/33/github-6980894_640.png" alt="Github" width="50" height="50"><br>GitHub</a></div>
+    </div>
+    <footer>
+
+        <p>&copy; <a href="index.html">Oussoukouamenorgil-Portfolio 2025</a> </p>
+    </footer>
+    <script>
+        const burger =document.getElementById('burger');
+        const liens= document.getElementById('lien');
+        burger.addEventListener('click',() => {
+            liens.classList.toggle('active');
+            
+        });
+        
+        //Effacer les données du formulaire après l'envoi
+        const form = document.querySelector('form');
+        form.addEventListener('submit', (event) => {
+            event.preventDefault(); // Empêche l'envoi du formulaire
+            form.reset(); // Réinitialise le formulaire
+            alert('Message envoyé ✨✉!');
+        });
+    </script>
+ 
+</body>
+</html>
