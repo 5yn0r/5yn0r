@@ -121,9 +121,10 @@
 ## 🤝 Me contacter / Collaborer
 
 * 💬 N'hésite pas à me contacter pour discuter de **projets Open Source**, de **missions de sécurité** ou simplement de **tech**.
-* 📫 **Email** : [Me contacter] (oknorgil@gmail.com)
-* 🔗 **LinkedIn** : [Voir mon LinkedIn] (https://www.linkedin.com/in/kouame-oussou)
 
+[![Email](https://img.shields.io/badge/Email-oknorgil@gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:oknorgil@gmail.com)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-kouame_oussou-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/kouame-oussou)
+[![GitHub](https://img.shields.io/badge/GitHub-5yn0r-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/5yn0r)
 ---
 
 <p align="center">
