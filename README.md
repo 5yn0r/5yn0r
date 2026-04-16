@@ -140,6 +140,3 @@
     <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/5yn0r/5yn0r/output/github-contribution-grid-snake.svg">
   </picture>
 </p>
-<p align="center">
-  <img src="https://raw.githubusercontent.com/5yn0r/5yn0r/output/snake.svg" alt="Snake animation" />
-</p>
