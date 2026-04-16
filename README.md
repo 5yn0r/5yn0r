@@ -1,6 +1,10 @@
 # 👨‍💻 5yn0r
 
 <p align="center">
+  <img src="profile.jpeg" alt="Photo de profil" width="150" height="150" style="border-radius: 50%; object-fit: cover;" />
+</p>
+
+<p align="center">
   <img src="https://readme-typing-svg.herokuapp.com/?lines=Passionné+de+Cybersécurité;Développeur+Web;Cloud+%26+Systèmes;Toujours+en+apprentissage&center=true&width=500&height=45">
 </p>
 
