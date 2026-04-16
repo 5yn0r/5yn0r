@@ -107,7 +107,6 @@
 
 > *Ajout de projets avec des descriptions en cours...*
 > 
-> Exemple :
 > *   **[Projet-Defense-SIEM](https://github.com/5yn0r/Projet-Defense-SIEM)** - Lab de détection d'intrusion avec Wazuh et Suricata.
 > *   **[Web-Scanner](https://github.com/5yn0r/Web-Scanner)** - Outil d'audit léger pour applications web écrit en Go.
 
@@ -134,7 +133,13 @@
 <p align="center">
   <i>⚡ "Stay curious. Break things. Secure them." ⚡</i>
 </p>
-
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/5yn0r/5yn0r/output/github-contribution-grid-snake-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/5yn0r/5yn0r/output/github-contribution-grid-snake.svg">
+    <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/5yn0r/5yn0r/output/github-contribution-grid-snake.svg">
+  </picture>
+</p>
 <p align="center">
   <img src="https://raw.githubusercontent.com/5yn0r/5yn0r/output/snake.svg" alt="Snake animation" />
 </p>
