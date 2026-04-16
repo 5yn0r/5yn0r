@@ -1,7 +1,7 @@
 # 👨‍💻 5yn0r
 
 <p align="center">
-  <img src="profile.jpeg" alt="Photo de profil" width="150" height="150" style="border-radius: 50%; object-fit: cover;" />
+  <img src="profile.jpeg" alt="Photo de profil" width="300" height="200" style="border-radius: 50%; object-fit: cover;" />
 </p>
 
 <p align="center">
