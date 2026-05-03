@@ -84,6 +84,11 @@
 <p align="center">
   <img src="https://github-readme-streak-stats.herokuapp.com/?user=5yn0r&theme=tokyonight" />
 </p>
+<p align="center">
+  <a href="https://github.com/ryo-ma/github-profile-trophy">
+    <img src="https://github-profile-trophy.vercel.app/?username=5yn0r&theme=tokyonight&row=1&column=7" alt="5yn0r" />
+  </a>
+</p>
 
 
 ---
