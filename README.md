@@ -74,25 +74,6 @@
 
 ---
 
-## 📊 Statistiques GitHub
-
-<p align="center">
-  <img height="180em" src="https://github-readme-stats.vercel.app/api?username=5yn0r&show_icons=true&theme=tokyonight&include_all_commits=true&count_private=true"/>
-  <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=5yn0r&layout=compact&langs_count=8&theme=tokyonight"/>
-</p>
-
-<p align="center">
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=5yn0r&theme=tokyonight" />
-</p>
-<p align="center">
-  <a href="https://github.com/ryo-ma/github-profile-trophy">
-    <img src="https://github-profile-trophy.vercel.app/?username=5yn0r&theme=tokyonight&row=1&column=7" alt="5yn0r" />
-  </a>
-</p>
-
-
----
-
 ## 📌 Projets Épinglés
 
 > *Ajout de projets avec des descriptions en cours...*
