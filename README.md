@@ -1,4 +1,4 @@
-# 👨‍💻 5yn0r
+# 👨‍💻 Hi !, I'am OUSSOU Kouame Norgil
 
 <p align="center">
   <img src="profile.jpeg" alt="Photo de profil" width="400" height="400" style="border-radius: 50%; object-fit: cover;" />
@@ -20,9 +20,6 @@
 
 * 🔐 Passionné par la **Cybersécurité**, avec un focus sur la **Read Team & la sécurité défensive**
 * 🌐 Développeur Web orienté applications modernes et performantes
-* ⚙️ Intéressé par les **Systèmes, Réseaux et Cloud**
-* 🛠️ J’aime créer des outils, automatiser et résoudre des problèmes concrets
-* 📚 En apprentissage constant : sécurité, infrastructure, technologies avancées
 * 🤝 Ouvert aux collaborations sur des projets **tech & sécurité**
 
 ---
@@ -61,8 +58,6 @@
 
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![Google Cloud](https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)](https://cloud.google.com/)
-[![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
-[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/features/actions)
 
 ---
 
@@ -70,7 +65,6 @@
 
 [![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
 [![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 
 ---
 
@@ -85,10 +79,9 @@
 
 ##  Objectifs actuels
 
-*  Approfondir la **cybersécurité offensive (Read Team)** : Analyse de logs, Threat Hunting, Reverse Engineering
-*  Maîtriser les architectures **Cloud Native & DevOps** (Certification CKA ou GCP en vue)
-*  Développer des applications web robustes et scalables avec **Go** et **React**
-*  Créer des outils d’automatisation performants pour la gestion d'infrastructure
+*  Approfondir la **cybersécurité offensive (Read Team)**.
+*  Développer des applications web robustes et scalables.
+*  Créer des outils d’automatisation performants pour la gestion d'infrastructure.
 
 ---
 
