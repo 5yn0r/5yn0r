@@ -1,4 +1,4 @@
-<h1 align="center">👾 OUSSOU Kouame Norgil — <code>5yn0r</code></h1>
+<h1 align="center"> >_ OUSSOU Kouame Norgil — <code>Synor</code></h1>
 
 <p align="center">
   <img src="profile.jpeg" alt="Photo de profil" width="160" height="160" style="border-radius: 50%; object-fit: cover;" />
@@ -23,7 +23,6 @@ Je construis des outils, je casse des choses, et je les sécurise ensuite.
 
 - 🔐 Focus sur la **Red Team**, la sécurité défensive et les CTFs
 - 🌍 Développeur de solutions tech pour des contextes **africains et locaux**
-- 🛠️ En cours : **Afrobridge** (marketplace africaine), **ITEtude** (curation de certifications IT), **Mobio IA** (assistant agricole IA)
 - 🎯 Objectif : maîtriser l'offensive security tout en construisant une stack full-stack solide
 
 ---
@@ -77,7 +76,6 @@ Je construis des outils, je casse des choses, et je les sécurise ensuite.
 
 | Projet | Description | Stack |
 |--------|-------------|-------|
-| [**Afrobridge**](https://github.com/5yn0r) | Marketplace e-commerce africaine — acheteurs, vendeurs, paiements locaux | Next.js · Node.js · PostgreSQL · Prisma |
 | [**ITEtude**](https://github.com/5yn0r/ITEtude) | Curation de ressources pour certifications IT (réseau, cloud, sécu, dev) | Web · Curation |
 | [**Mobio IA**](https://github.com/5yn0r) | Assistant agricole IA pour le contexte ivoirien — diagnostic, météo, marché | Python · IA · Langues locales |
 | [**Image-Service**](https://github.com/5yn0r/image-service) | Pipeline de traitement d'images : upload depuis serveur X → traitement sur VPS | Python · VPS |
@@ -100,8 +98,7 @@ Je construis des outils, je casse des choses, et je les sécurise ensuite.
 ## 🎯 Objectifs actuels
 
 - [ ] Approfondir la **cybersécurité offensive** (Red Team, pentest web, AD)
-- [ ] Finir et déployer **Afrobridge V1** en production
-- [ ] Construire un modèle IA local pour **Mobio IA** (fine-tuning, souveraineté technologique)
+- [ ] Construire un modèle IA local - **Mobio IA** (fine-tuning, souveraineté technologique)
 - [ ] Contribuer à des projets **Open Source** orientés Afrique & sécurité
 
 ---
