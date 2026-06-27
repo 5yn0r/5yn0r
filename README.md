@@ -99,5 +99,5 @@
 </p>
 
 <p align="center">
-  <img src="https://github.com/5yn0r/5yn0r/blob/output/github-contribution-grid-snake-dark.svg?raw=true" alt="Snake animation" />
+  <img src="https://raw.githubusercontent.com/5yn0r/5yn0r/output/github-contribution-grid-snake.svg" alt="Snake animation" />
 </p>
