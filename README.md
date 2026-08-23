@@ -77,9 +77,6 @@ Je construis des outils, je casse des choses, et je les sécurise ensuite.
 | Projet | Description | Stack |
 |--------|-------------|-------|
 | [**ITEtude**](https://github.com/5yn0r/ITEtude) | Curation de ressources pour certifications IT (réseau, cloud, sécu, dev) | Web · Curation |
-| [**Mobio IA**](https://github.com/5yn0r) | Assistant agricole IA pour le contexte ivoirien — diagnostic, météo, marché | Python · IA · Langues locales |
-| [**Image-Service**](https://github.com/5yn0r/image-service) | Pipeline de traitement d'images : upload depuis serveur X → traitement sur VPS | Python · VPS |
-
 ---
 
 ## 📊 Stats GitHub
