@@ -21,9 +21,9 @@
 Étudiant en informatique passionné par la **cybersécurité offensive** et le **développement d'applications modernes**.  
 Je construis des outils, je casse des choses, et je les sécurise ensuite.
 
-- 🔐 Focus sur la **Red Team**, la sécurité défensive et les CTFs
-- 🌍 Développeur de solutions tech pour des contextes **africains et locaux**
-- 🎯 Objectif : maîtriser l'offensive security tout en construisant une stack full-stack solide
+-  Focus sur la **Red Team**, la sécurité défensive et les CTFs
+-  Développeur de solutions tech pour des contextes **africains et locaux**
+-  Objectif : maîtriser l'offensive security tout en construisant une stack full-stack solide
 
 ---
 
