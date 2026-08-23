@@ -77,18 +77,6 @@ Je construis des outils, je casse des choses, et je les sécurise ensuite.
 | Projet | Description | Stack |
 |--------|-------------|-------|
 | [**ITEtude**](https://github.com/5yn0r/ITEtude) | Curation de ressources pour certifications IT (réseau, cloud, sécu, dev) | Web · Curation |
----
-
-## 📊 Stats GitHub
-
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=5yn0r&show_icons=true&theme=tokyonight&hide_border=true&count_private=true" height="160"/>
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=5yn0r&layout=compact&theme=tokyonight&hide_border=true" height="160"/>
-</p>
-
-<p align="center">
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=5yn0r&theme=tokyonight&hide_border=true" />
-</p>
 
 ---
 
