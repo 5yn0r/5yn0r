@@ -16,7 +16,7 @@
 
 ---
 
-## 🧑‍💻 À propos
+##  À propos
 
 Étudiant en informatique passionné par la **cybersécurité offensive** et le **développement d'applications modernes**.  
 Je construis des outils, je casse des choses, et je les sécurise ensuite.
@@ -27,9 +27,9 @@ Je construis des outils, je casse des choses, et je les sécurise ensuite.
 
 ---
 
-## 🧰 Stack technique
+##  Stack technique
 
-### 💻 Langages
+###  Langages
 <p>
   <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"/>
@@ -38,7 +38,7 @@ Je construis des outils, je casse des choses, et je les sécurise ensuite.
   <img src="https://img.shields.io/badge/Bash-121011?style=for-the-badge&logo=gnu-bash&logoColor=white"/>
 </p>
 
-### 🌐 Web & Backend
+###  Web & Backend
 <p>
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white"/>
   <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"/>
@@ -49,7 +49,7 @@ Je construis des outils, je casse des choses, et je les sécurise ensuite.
   <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black"/>
 </p>
 
-### 🔐 Cybersécurité & Réseaux
+###  Cybersécurité & Réseaux
 <p>
   <img src="https://img.shields.io/badge/Kali_Linux-557C94?style=for-the-badge&logo=kalilinux&logoColor=white"/>
   <img src="https://img.shields.io/badge/Metasploit-2A2A2A?style=for-the-badge&logo=metasploit&logoColor=white"/>
@@ -60,7 +60,7 @@ Je construis des outils, je casse des choses, et je les sécurise ensuite.
   <img src="https://img.shields.io/badge/Burp_Suite-FF6633?style=for-the-badge&logo=portswigger&logoColor=white"/>
 </p>
 
-### ☁️ Cloud & DevOps
+###  Cloud & DevOps
 <p>
   <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
   <img src="https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white"/>
@@ -72,7 +72,7 @@ Je construis des outils, je casse des choses, et je les sécurise ensuite.
 
 ---
 
-## 🚀 Projets
+##  Projets
 
 | Projet | Description | Stack |
 |--------|-------------|-------|
