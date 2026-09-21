@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="loading">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,17 +13,26 @@
   --cyan: #00eeff;
   --red: #ff2244;
   --orange: #ff9900;
-  --bg: #030d07;
-  --bg2: #050f09;
-  --panel: #071409;
-  --border: #0d3318;
+  --bg: #07160d;
+  --bg2: #09190f;
+  --panel: #0b1e12;
+  --border: #12401f;
   --text: #b0ffcc;
   --dim: #3a6649;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 70px; scrollbar-gutter: stable; }
+
+/* ── ICONS (sprite SVG inline) ── */
+.ic {
+  width: 1em; height: 1em; flex: none;
+  fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  vertical-align: -0.125em;
+}
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 
 body {
   background: var(--bg);
@@ -38,7 +47,7 @@ body {
   width: 20px; height: 20px;
   border: 2px solid var(--green);
   position: fixed; top: 0; left: 0;
-  pointer-events: none; z-index: 9999;
+  pointer-events: none; z-index: 10001;
   transform: translate(-50%, -50%);
   transition: transform 0.08s, border-color 0.2s;
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
@@ -48,7 +57,7 @@ body {
   background: var(--green);
   border-radius: 50%;
   position: fixed; top: 0; left: 0;
-  pointer-events: none; z-index: 9999;
+  pointer-events: none; z-index: 10001;
   transform: translate(-50%, -50%);
 }
 
@@ -92,7 +101,7 @@ nav {
   position: fixed; top: 0; left: 0; right: 0;
   display: flex; align-items: center; justify-content: space-between;
   padding: 14px 40px;
-  background: linear-gradient(180deg, #030d07ee, transparent);
+  background: linear-gradient(180deg, #07160dee, transparent);
   z-index: 500;
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(4px);
@@ -120,8 +129,14 @@ nav {
   opacity: 0;
   transition: opacity 0.2s;
 }
-.nav-links a:hover { color: var(--green); }
-.nav-links a:hover::before { opacity: 1; }
+.nav-links a:hover, .nav-links a.active { color: var(--green); }
+.nav-links a:hover::before, .nav-links a.active::before { opacity: 1; }
+
+.nav-toggle {
+  display: none; background: none; border: 1px solid var(--border);
+  color: var(--green); width: 38px; height: 38px; cursor: pointer;
+  place-items: center; font-size: 1.1rem;
+}
 
 .nav-status {
   display: flex; align-items: center; gap: 8px;
@@ -241,14 +256,46 @@ nav {
 }
 .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
 
-/* Hero decorative lines */
+/* Hero : simulation réseau (canvas) */
 .hero-deco {
-  position: absolute; right: 6vw; top: 50%;
+  position: absolute; right: 4vw; top: 50%;
   transform: translateY(-50%);
+  width: min(600px, 41vw, calc(100vh - 300px));
   opacity: 0; animation: fadeIn 1s 1.4s forwards;
 }
-
-.network-svg { width: 380px; height: 380px; }
+.net-frame {
+  position: relative;
+  border: 1px solid var(--border);
+  background: radial-gradient(circle at 50% 50%, rgba(0,255,136,0.07), transparent 65%), var(--panel);
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+}
+.net-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 14px; border-bottom: 1px solid var(--border);
+  background: #0e2818; font-size: 0.62rem; letter-spacing: 0.14em; color: var(--dim);
+}
+.net-head b { color: var(--green); font-weight: normal; }
+.net-head .live { display: flex; align-items: center; gap: 7px; }
+.net-head .live i {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--red);
+  box-shadow: 0 0 8px var(--red); animation: blink 1s infinite;
+}
+#net-canvas { display: block; width: 100%; aspect-ratio: 1 / 1; }
+.net-log {
+  border-top: 1px solid var(--border);
+  padding: 10px 14px; height: 108px; overflow: hidden;
+  font-size: 0.62rem; line-height: 1.65; color: var(--dim);
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.net-legend {
+  display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 7px 14px;
+  border-top: 1px solid var(--border); font-size: 0.56rem; letter-spacing: 0.08em; color: var(--dim);
+}
+.net-legend i { display: inline-block; width: 7px; height: 7px; margin-right: 6px; vertical-align: 0; }
+.net-log div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; animation: fadeIn 0.4s; }
+.net-log .ok { color: var(--green); }
+.net-log .bad { color: var(--red); }
+.net-log .info { color: var(--cyan); }
 
 /* Stat strip */
 .hero-stats {
@@ -321,7 +368,7 @@ section {
 }
 
 .terminal-bar {
-  background: #0a1f0e;
+  background: #0e2818;
   padding: 10px 16px;
   display: flex; align-items: center; gap: 8px;
   border-bottom: 1px solid var(--border);
@@ -356,34 +403,76 @@ section {
 }
 
 /* Skills radar */
-.skills-list { display: flex; flex-direction: column; gap: 16px; }
+.skills-list { display: flex; flex-direction: column; gap: 22px; }
 
 .skill-item { position: relative; }
 .skill-header {
-  display: flex; justify-content: space-between;
-  margin-bottom: 6px; font-size: 0.78rem;
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 8px; font-size: 0.86rem;
 }
 .skill-name { color: var(--text); }
-.skill-pct { color: var(--green); font-size: 0.7rem; }
+.skill-pct { color: var(--green); font-family: 'Orbitron', monospace; font-size: 0.8rem; font-weight: 700; text-shadow: 0 0 10px var(--green2); }
 
 .skill-bar {
-  height: 3px;
-  background: var(--border);
+  height: 10px;
+  background: rgba(0,255,136,0.05);
+  border: 1px solid var(--border);
   position: relative; overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 5px) 100%, 0 100%);
+}
+.skill-bar::after {                       /* graduations */
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(90deg, transparent 0 calc(10% - 1px), rgba(7,22,13,0.65) calc(10% - 1px) 10%);
 }
 .skill-fill {
   height: 100%;
   background: linear-gradient(90deg, var(--green2), var(--green));
-  box-shadow: 0 0 8px var(--green);
+  box-shadow: 0 0 12px var(--green);
   width: 0;
   transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}.skill-tag {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
 }
-.skill-fill.animated { }
+.skill-tag span {
+  font-size: 0.63rem; color: #5f9a75; letter-spacing: 0.06em;
+  border: 1px solid var(--border); padding: 2px 8px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.skill-item:hover .skill-tag span { color: var(--text); border-color: var(--green-dim); }
+.skill-name { display: flex; align-items: center; gap: 8px; }
+.skill-name .ic { color: var(--green); width: 14px; height: 14px; }
 
-.skill-tag {
-  font-size: 0.6rem; color: var(--dim);
-  letter-spacing: 0.08em;
-  margin-top: 3px;
+.about-lead {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.25rem; line-height: 1.5; color: var(--text); margin-bottom: 14px;
+}
+.about-lead strong { color: var(--green); font-weight: 600; }
+.about-text { font-size: 0.82rem; color: var(--dim); line-height: 1.9; margin-bottom: 28px; }
+
+.pillars {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 34px;
+}
+.pillar {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 14px; border: 1px solid var(--border); background: var(--panel);
+  transition: border-color 0.3s, transform 0.3s;
+}
+.pillar:hover { border-color: var(--green2); transform: translateY(-2px); }
+.pillar .ic { width: 20px; height: 20px; color: var(--cyan); margin-top: 2px; }
+.pillar-title { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--text); }
+.pillar-desc { font-size: 0.66rem; color: var(--dim); line-height: 1.55; margin-top: 2px; }
+
+.about-facts {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  margin-top: 16px; background: var(--border); border: 1px solid var(--border);
+}
+.fact { background: var(--panel); padding: 14px 12px; }
+.fact .ic { width: 15px; height: 15px; color: var(--green); margin-bottom: 8px; }
+.fact-val { font-size: 0.74rem; color: var(--text); }
+.fact-label { font-size: 0.58rem; color: var(--dim); letter-spacing: 0.14em; text-transform: uppercase; margin-top: 2px; }
+
+@media (max-width: 480px) {
+  .pillars { grid-template-columns: 1fr; }
 }
 
 /* ── PROJECTS ── */
@@ -419,7 +508,7 @@ section {
 }
 
 .project-badge {
-  display: inline-block;
+  display: inline-flex; align-items: center; gap: 6px;
   background: var(--green-dim);
   border: 1px solid var(--green2);
   color: var(--green);
@@ -457,24 +546,62 @@ section {
   display: flex; align-items: center; gap: 5px;
 }
 .proj-link:hover { color: var(--green); }
-.proj-link::before { content: '→ '; color: var(--green); }
+.proj-link .ic { width: 13px; height: 13px; color: var(--green); }
 
 .project-icon {
-  position: absolute; bottom: 20px; right: 20px;
-  font-size: 2.5rem; opacity: 0.05;
-  font-family: 'Orbitron', monospace;
-  color: var(--green);
+  position: absolute; bottom: 14px; right: 18px;
+  opacity: 0.06; color: var(--green);
+  transition: opacity 0.3s, transform 0.3s;
 }
+.project-icon .ic { width: 88px; height: 88px; stroke-width: 1; }
+.project-card:hover .project-icon { opacity: 0.14; transform: scale(1.06) rotate(-4deg); }
 
 /* featured card */
 .project-card.featured {
   grid-column: span 2;
   border-color: rgba(0,255,136,0.2);
-  background: linear-gradient(135deg, var(--panel), #071a0e);
+  background: linear-gradient(135deg, var(--panel), #0d2416);
 }
 @media (max-width: 768px) {
   .project-card.featured { grid-column: span 1; }
 }
+
+/* carte large (VEAS NETWORK) */
+.project-card.wide { grid-column: 1 / -1; }
+.wide-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 36px; }
+.project-sub {
+  font-size: 0.72rem; color: var(--cyan); letter-spacing: 0.06em;
+  margin: -4px 0 12px;
+}
+.project-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+.feature-title {
+  font-size: 0.62rem; color: var(--green); letter-spacing: 0.16em;
+  text-transform: uppercase; margin-bottom: 12px;
+}
+.feature-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.feature-list li {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 0.76rem; color: var(--dim); line-height: 1.6;
+}
+.feature-list li .ic { color: var(--green); margin-top: 3px; width: 13px; height: 13px; }
+.feature-list li b { color: var(--text); font-weight: normal; }
+.project-note {
+  display: flex; gap: 10px; align-items: flex-start;
+  margin-top: 18px; padding: 10px 12px;
+  border: 1px dashed rgba(255,153,0,0.35);
+  font-size: 0.66rem; color: var(--dim); line-height: 1.6;
+}
+.project-note .ic { color: var(--orange); margin-top: 2px; width: 14px; height: 14px; }
+.feature-group + .feature-group { margin-top: 24px; }
+.stack-list {
+  display: grid; grid-template-columns: auto 1fr; gap: 6px 18px;
+  margin-bottom: 20px; padding: 12px 14px;
+  border: 1px solid var(--border); background: rgba(0,255,136,0.03);
+  font-size: 0.68rem; line-height: 1.5;
+}
+.stack-list dt { color: var(--dim); text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.58rem; padding-top: 2px; }
+.stack-list dd { color: var(--text); }
+@media (max-width: 900px) { .wide-grid { grid-template-columns: 1fr; gap: 20px; } }
 
 /* ── EXPERIENCE ── */
 #experience { background: var(--bg2); }
@@ -524,7 +651,7 @@ section {
 
 .certs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 20px;
 }
 
@@ -537,23 +664,54 @@ section {
   overflow: hidden;
 }
 .cert-card::after {
-  content: '✓';
-  position: absolute; top: -10px; right: 10px;
-  font-size: 6rem; color: var(--green);
-  opacity: 0.03; font-family: 'Orbitron', monospace;
+  content: '';
+  position: absolute; top: -14px; right: 4px;
+  width: 96px; height: 96px; opacity: 0.04;
+  background: var(--green);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/contain no-repeat;
 }
-.cert-card:hover { border-color: var(--orange); }
+.cert-card:hover { border-color: var(--orange); transform: translateY(-3px); }
+.cert-card { transition: border-color 0.3s, transform 0.3s; }
+.cert-card.planned { border-style: dashed; opacity: 0.55; }
+.cert-card.planned:hover { border-color: var(--dim); transform: none; }
+.cert-card.planned .cert-badge { color: var(--dim); border-color: var(--border); }
 
-.cert-icon { font-size: 1.6rem; margin-bottom: 12px; }
+.cert-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 16px;
+}
+.cert-icon {
+  width: 42px; height: 42px;
+  display: grid; place-items: center;
+  color: var(--green); border: 1px solid var(--border);
+  background: rgba(0,255,136,0.04);
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+}
+.cert-icon .ic { width: 20px; height: 20px; }
+.cert-card:hover .cert-icon { color: var(--orange); border-color: rgba(255,153,0,0.4); }
+.cert-card.planned:hover .cert-icon { color: var(--green); border-color: var(--border); }
 .cert-name {
   font-family: 'Rajdhani', sans-serif;
   font-size: 0.95rem; font-weight: 700; color: var(--text);
   margin-bottom: 4px;
 }
-.cert-issuer { font-size: 0.7rem; color: var(--dim); }
+.cert-desc { font-size: 0.72rem; color: var(--dim); line-height: 1.6; }
+.cert-issuer {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border);
+  font-size: 0.66rem; color: var(--dim); letter-spacing: 0.04em;
+}
+.cert-issuer b { color: var(--cyan); font-weight: normal; letter-spacing: 0.06em; }
+.cert-issuer a {
+  color: var(--cyan); text-decoration: none; letter-spacing: 0.06em;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.cert-issuer a:hover { text-decoration: underline; }
+.cert-issuer .ic { width: 12px; height: 12px; }
 
 .cert-badge {
-  display: inline-block; margin-top: 12px;
+  display: inline-block;
   font-size: 0.58rem; color: var(--orange);
   border: 1px solid rgba(255,153,0,0.3);
   padding: 2px 8px; letter-spacing: 0.1em; text-transform: uppercase;
@@ -588,7 +746,12 @@ section {
 .contact-row {
   display: flex; align-items: center; gap: 16px;
 }
-.contact-ico { color: var(--green); font-size: 0.9rem; min-width: 20px; }
+.contact-ico {
+  color: var(--green); flex: none;
+  width: 34px; height: 34px; display: grid; place-items: center;
+  border: 1px solid var(--border); background: rgba(0,255,136,0.04);
+}
+.contact-ico .ic { width: 16px; height: 16px; }
 .contact-val {
   font-size: 0.8rem; color: var(--text);
 }
@@ -631,6 +794,51 @@ textarea.form-input { resize: none; height: 90px; }
   transition: all 0.25s;
   clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
 }
+.form-submit:disabled { opacity: 0.6; cursor: wait; }
+.contact-form { position: relative; min-height: 430px; overflow: hidden; }
+.form-thanks {
+  position: absolute; inset: 0; z-index: 3;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px; text-align: center; overflow-y: auto;
+  background: radial-gradient(circle at 50% 30%, rgba(0,255,136,0.10), transparent 60%), var(--panel);
+  opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0.4s;
+}
+.form-thanks.show { opacity: 1; visibility: visible; }
+.thanks-check { width: 76px; height: 76px; margin-bottom: 14px; filter: drop-shadow(0 0 14px var(--green2)); }
+.thanks-check circle, .thanks-check path {
+  fill: none; stroke: var(--green); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 150; stroke-dashoffset: 150;
+}
+.form-thanks.show .thanks-check circle { animation: draw 0.7s 0.1s ease-out forwards; }
+.form-thanks.show .thanks-check path { stroke-dasharray: 40; stroke-dashoffset: 40; animation: draw 0.4s 0.7s ease-out forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.thanks-title {
+  font-family: 'Orbitron', monospace; font-weight: 700; font-size: 1.05rem;
+  letter-spacing: 0.12em; color: var(--green); text-shadow: 0 0 20px var(--green2);
+}
+.thanks-text { font-size: 0.8rem; color: var(--text); line-height: 1.7; margin: 10px 0 14px; max-width: 320px; }
+.thanks-text b { color: var(--cyan); font-weight: normal; }
+.thanks-log {
+  width: 100%; max-width: 340px; min-height: 66px; text-align: left;
+  border: 1px solid var(--border); background: rgba(0,0,0,0.25);
+  padding: 8px 12px; font-size: 0.64rem; line-height: 1.75; color: var(--dim);
+}
+.thanks-log div { animation: fadeIn 0.3s; }
+.thanks-log .ok { color: var(--green); }
+.thanks-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 18px; }
+.thanks-actions .btn-primary, .thanks-actions .btn-secondary { padding: 10px 18px; font-size: 0.68rem; }
+.thanks-burst { position: absolute; left: 50%; top: 32%; width: 0; height: 0; pointer-events: none; }
+.thanks-burst i {
+  position: absolute; width: 5px; height: 5px; background: var(--green);
+  box-shadow: 0 0 8px var(--green); animation: burst 0.9s ease-out forwards;
+}
+.thanks-burst i:nth-child(3n) { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+.thanks-burst i:nth-child(5n) { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+@keyframes burst { from { transform: translate(0,0) scale(1); opacity: 1; } to { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; } }
+.form-status { min-height: 1.2em; margin-top: 14px; font-size: 0.7rem; line-height: 1.6; letter-spacing: 0.04em; }
+.form-status.ok { color: var(--green); }
+.form-status.err { color: var(--red); }
+.form-status a { color: var(--cyan); }
 .form-submit:hover {
   background: var(--green); color: var(--bg);
   box-shadow: 0 0 30px var(--green2);
@@ -644,6 +852,13 @@ footer {
   display: flex; justify-content: space-between; align-items: center;
 }
 .footer-copy { font-size: 0.65rem; color: var(--dim); letter-spacing: 0.1em; }
+.footer-social { display: flex; gap: 10px; }
+.footer-social a {
+  width: 34px; height: 34px; display: grid; place-items: center;
+  color: var(--dim); border: 1px solid var(--border); font-size: 0.95rem;
+  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.footer-social a:hover { color: var(--green); border-color: var(--green2); box-shadow: 0 0 14px rgba(0,255,136,0.15); }
 .footer-right { font-size: 0.65rem; color: var(--dim); }
 .footer-right span { color: var(--green); }
 
@@ -659,79 +874,308 @@ footer {
   animation: scan 6s linear infinite;
 }
 
-/* ── LOADING SCREEN ── */
-#loader {
-  position: fixed; inset: 0;
-  background: var(--bg);
-  z-index: 10000;
-  display: flex; flex-direction: column;
-  justify-content: center; align-items: center;
-  gap: 24px;
-  transition: opacity 0.6s, visibility 0.6s;
-}
-#loader.hidden { opacity: 0; visibility: hidden; }
+/* ── LOADER : séquence de démarrage sécurisé ── */
+html.loading, html.loading body { overflow: hidden; }
+/* le hero attend l'ouverture des portes pour jouer son entrée */
+html.loading .hero-tag, html.loading .hero-name, html.loading .hero-sub, html.loading .hero-desc,
+html.loading .hero-cta, html.loading .hero-stats, html.loading .hero-deco { animation-play-state: paused; }
 
-.loader-logo {
-  font-family: 'Orbitron', monospace;
-  font-size: 1.4rem; font-weight: 900;
-  color: var(--green);
-  text-shadow: 0 0 30px var(--green);
-}
+#loader { position: fixed; inset: 0; z-index: 10000; overflow: hidden; }
+#loader.gone { display: none; }
 
-.loader-bar {
-  width: 300px; height: 2px;
-  background: var(--border);
+.door {
+  position: absolute; left: 0; right: 0; height: 50.3%;
+  background:
+    linear-gradient(rgba(0,255,136,0.035) 1px, transparent 1px) 0 0 / 100% 40px,
+    linear-gradient(90deg, rgba(0,255,136,0.035) 1px, transparent 1px) 0 0 / 40px 100%,
+    radial-gradient(ellipse at 50% 50%, #0d2416, var(--bg) 70%);
+  transition: transform 0.95s cubic-bezier(0.77, 0, 0.18, 1);
+  will-change: transform;
 }
-.loader-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--green2), var(--green));
-  box-shadow: 0 0 10px var(--green);
-  width: 0; transition: width 0.05s linear;
-}
+.door-top    { top: 0;    border-bottom: 1px solid rgba(0,255,136,0.45); box-shadow: 0 8px 40px rgba(0,255,136,0.18); }
+.door-bottom { bottom: 0; border-top: 1px solid rgba(0,255,136,0.45);    box-shadow: 0 -8px 40px rgba(0,255,136,0.18); }
+#loader.open .door-top    { transform: translateY(-101%); }
+#loader.open .door-bottom { transform: translateY(101%); }
 
-.loader-text {
-  font-size: 0.7rem; color: var(--dim);
-  letter-spacing: 0.1em;
+#ldRain {
+  position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.85; transition: opacity 0.4s;
+  /* la pluie s'efface au centre pour laisser le cadran lisible */
+  -webkit-mask-image: radial-gradient(ellipse 34% 46% at 50% 50%, transparent 55%, #000 100%);
+          mask-image: radial-gradient(ellipse 34% 46% at 50% 50%, transparent 55%, #000 100%);
 }
 
-/* ── NETWORK SVG ANIMATION ── */
-.node { animation: nodePulse 3s ease-in-out infinite; }
-.node:nth-child(2) { animation-delay: 0.5s; }
-.node:nth-child(3) { animation-delay: 1s; }
-.node:nth-child(4) { animation-delay: 1.5s; }
-.node:nth-child(5) { animation-delay: 2s; }
-
-@keyframes nodePulse {
-  0%,100% { opacity: 0.5; r: 6; }
-  50% { opacity: 1; r: 8; }
+/* laser de découpe au centre */
+.ld-seam {
+  position: absolute; left: 0; right: 0; top: 50%; height: 2px;
+  transform: translateY(-50%) scaleX(0);
+  background: linear-gradient(90deg, transparent, #d8fff0 20%, #fff 50%, #d8fff0 80%, transparent);
+  box-shadow: 0 0 20px var(--green), 0 0 60px var(--green2), 0 0 120px var(--green2);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s;
+  pointer-events: none;
 }
+#loader.cut .ld-seam { transform: translateY(-50%) scaleX(1); }
+#loader.open .ld-seam { opacity: 0; transition-delay: 0.25s; }
 
-.edge { stroke-dasharray: 200; animation: edgeFlow 3s linear infinite; }
-.edge:nth-child(even) { animation-direction: reverse; }
-@keyframes edgeFlow {
-  from { stroke-dashoffset: 200; }
-  to { stroke-dashoffset: 0; }
+.ld-hud {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 26px 32px; transition: opacity 0.35s;
 }
+#loader.cut .ld-hud, #loader.cut #ldRain { opacity: 0; }
+
+.ld-corner { position: absolute; width: 30px; height: 30px; border: 0 solid rgba(0,255,136,0.55); }
+.ld-corner.tl { top: 14px; left: 14px;  border-top-width: 2px; border-left-width: 2px; }
+.ld-corner.tr { top: 14px; right: 14px; border-top-width: 2px; border-right-width: 2px; }
+.ld-corner.bl { bottom: 14px; left: 14px;  border-bottom-width: 2px; border-left-width: 2px; }
+.ld-corner.br { bottom: 14px; right: 14px; border-bottom-width: 2px; border-right-width: 2px; }
+
+.ld-top, .ld-bottom {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  font-size: 0.66rem; letter-spacing: 0.16em; color: var(--dim);
+}
+.ld-top b { color: var(--green); font-weight: normal; }
+.ld-top .ld-right { display: flex; align-items: center; gap: 18px; }
+.ld-skip {
+  background: none; border: 1px solid var(--border); color: var(--dim);
+  font: inherit; font-size: 0.62rem; letter-spacing: 0.14em; padding: 5px 10px; cursor: pointer;
+  text-transform: uppercase; transition: color 0.2s, border-color 0.2s;
+}
+.ld-skip:hover { color: var(--green); border-color: var(--green2); }
+
+.ld-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; }
+.ld-dial { --d: min(320px, 74vw); position: relative; width: var(--d); height: var(--d); }
+.ld-rings { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.ld-rings circle, .ld-rings line { fill: none; }
+.ld-r-out  { stroke: rgba(0,255,136,0.22); stroke-width: 1; stroke-dasharray: 3 9; transform-origin: 150px 150px; animation: ldspin 24s linear infinite; }
+.ld-r-mid  { stroke: rgba(0,238,255,0.35); stroke-width: 1; stroke-dasharray: 40 18 6 18; transform-origin: 150px 150px; animation: ldspin 14s linear infinite reverse; }
+.ld-r-in   { stroke: rgba(0,255,136,0.18); stroke-width: 1; stroke-dasharray: 2 6; transform-origin: 150px 150px; animation: ldspin 30s linear infinite; }
+.ld-track  { stroke: rgba(0,255,136,0.10); stroke-width: 4; }
+.ld-arc    { stroke: var(--green); stroke-width: 4; stroke-linecap: round; filter: drop-shadow(0 0 6px var(--green)); }
+.ld-dot    { fill: #fff; filter: drop-shadow(0 0 8px var(--green)); }
+.tk        { stroke: rgba(0,255,136,0.16); stroke-width: 1.4; transition: stroke 0.2s; }
+.tk.major  { stroke-width: 2.2; }
+.tk.on     { stroke: var(--green); filter: drop-shadow(0 0 3px var(--green)); }
+@keyframes ldspin { to { transform: rotate(360deg); } }
+
+.ld-core {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-family: 'Orbitron', monospace; transition: opacity 0.2s;
+}
+.ld-name { font-size: calc(var(--d) * 0.05); font-weight: 700; letter-spacing: 0.04em; white-space: nowrap; }
+.ld-name span { display: inline-block; width: 0.92em; text-align: center; color: var(--cyan); opacity: 0.55; }
+.ld-name span.lock { color: var(--green); opacity: 1; text-shadow: 0 0 14px var(--green2); }
+.ld-pct { margin-top: calc(var(--d) * 0.03); font-size: calc(var(--d) * 0.14); font-weight: 900; color: var(--text); text-shadow: 0 0 24px var(--green2); }
+.ld-pct small { font-size: 0.4em; color: var(--green); margin-left: 2px; }
+.ld-sub { margin-top: 4px; font-size: calc(var(--d) * 0.028); letter-spacing: 0.3em; color: var(--dim); font-family: 'Share Tech Mono', monospace; }
+
+.ld-granted {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-family: 'Orbitron', monospace; font-weight: 900; text-align: center;
+  font-size: calc(var(--d) * 0.085); line-height: 1.25; letter-spacing: 0.1em; color: var(--green);
+  text-shadow: 0 0 30px var(--green), 0 0 60px var(--green2); opacity: 0; pointer-events: none;
+}
+.ld-granted small { font-family: 'Share Tech Mono', monospace; font-weight: normal; font-size: 0.32em; letter-spacing: 0.3em; color: var(--text); margin-top: 8px; text-shadow: none; }
+#loader.granted .ld-core { opacity: 0; }
+#loader.granted .ld-granted { opacity: 1; animation: ldgrant 0.7s steps(1) 1; }
+#loader.granted .ld-rings { animation: ldflash 0.7s ease-out 1; }
+@keyframes ldgrant {
+  0%   { transform: translate(-4px, 1px); text-shadow: 3px 0 var(--red), -3px 0 var(--cyan); opacity: 1; }
+  20%  { transform: translate(4px, -1px); }
+  40%  { transform: translate(-2px, 0);   text-shadow: -3px 0 var(--red), 3px 0 var(--cyan); }
+  60%  { transform: translate(2px, 1px); }
+  80%  { transform: none; text-shadow: 0 0 30px var(--green), 0 0 60px var(--green2); }
+}
+@keyframes ldflash { 0% { filter: brightness(3) drop-shadow(0 0 30px var(--green)); } 100% { filter: none; } }
+
+.ld-status { min-height: 1.3em; font-size: 0.78rem; letter-spacing: 0.06em; color: var(--text); text-align: center; }
+.ld-status::after { content: ''; display: inline-block; width: 7px; height: 13px; margin-left: 5px; background: var(--green); vertical-align: -2px; animation: blink 0.9s infinite; }
+.ld-bar { width: min(360px, 80vw); height: 8px; border: 1px solid var(--border); background: rgba(0,255,136,0.05); position: relative; }
+.ld-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--green2), var(--green)); box-shadow: 0 0 12px var(--green); }
+.ld-bar::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 calc(10% - 1px), rgba(7,22,13,0.7) calc(10% - 1px) 10%); }
+
+.ld-bottom { align-items: flex-end; font-size: 0.6rem; }
+.ld-log { line-height: 1.7; min-height: 6.8em; display: flex; flex-direction: column; justify-content: flex-end; text-align: left; }
+.ld-log div { white-space: nowrap; animation: fadeIn 0.2s; }
+.ld-log .ok  em { color: var(--green);  font-style: normal; }
+.ld-log .warn em { color: var(--orange); font-style: normal; }
+.ld-log .warn { color: var(--orange); }
+.ld-meta { text-align: right; line-height: 1.8; }
+.ld-meta b { color: var(--cyan); font-weight: normal; }
+
+@media (max-width: 640px) {
+  .ld-hud { padding: 20px 18px; }
+  .ld-log { display: none; }
+  .ld-bottom { justify-content: center; }
+  .ld-meta { text-align: center; }
+  .ld-top .ld-title { display: none; }
+  .ld-top { justify-content: flex-end; }
+}
+@media (max-height: 560px) { .ld-log, .ld-meta { display: none; } .ld-center { gap: 12px; } }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (hover: none) {
+  body { cursor: auto; }
+  #cursor, #cursor-dot { display: none; }
+}
+#hero { min-height: 100vh; min-height: 100svh; }
+
+/* Tablette & mobile : la simulation réseau passe sous le texte du hero */
+@media (max-width: 1100px) {
+  #hero { padding-top: 110px; padding-bottom: 70px; }
+  .hero-deco {
+    position: relative; right: auto; top: auto; transform: none;
+    width: min(600px, 100%); margin-top: 56px;
+  }
+}
+
+/* Menu : hamburger dès que la barre devient trop étroite */
+.nav-links a { white-space: nowrap; }
+@media (max-width: 1180px) { .nav-status { display: none; } }
+@media (max-width: 1000px) {
   nav { padding: 12px 20px; }
-  .nav-links { display: none; }
-  section { padding: 70px 5vw; }
-  .about-grid, .contact-grid { grid-template-columns: 1fr; }
-  .hero-deco { display: none; }
-  .hero-stats { gap: 28px; flex-wrap: wrap; }
-  footer { flex-direction: column; gap: 10px; text-align: center; }
+  .nav-toggle { display: grid; }
+  .nav-links {
+    position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; align-items: flex-start; gap: 0;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    max-height: 0; overflow: hidden; transition: max-height 0.3s;
+  }
+  .nav-links.open { max-height: 320px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+  .nav-links a { padding: 14px 20px; width: 100%; font-size: 0.8rem; color: var(--text); }
+  .nav-links a.active { color: var(--green); }
+  .nav-links a::before { opacity: 0; }
+  .nav-links a.active::before { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  section { padding: 64px 5vw; }
+  #hero { padding: 96px 5vw 56px; }
+  .section-header { gap: 12px; margin-bottom: 36px; }
+  .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 36px; }
+
+  .hero-desc { font-size: 0.8rem; }
+  .hero-cta { flex-direction: column; align-items: stretch; width: 100%; max-width: 340px; }
+  .hero-cta a { text-align: center; }
+  .hero-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 26px 16px;
+    width: 100%; margin-top: 44px;
+  }
+  .hero-deco { margin-top: 44px; }
+  .net-legend { font-size: 0.6rem; }
+
+  .project-card { padding: 22px 18px; }
+  .cert-card { padding: 20px 18px; }
+  .timeline { padding-left: 30px; }
+  .timeline-dot { left: -34px; }
+  .tl-desc li { margin-left: 14px; }
+  .contact-form { padding: 24px 20px; min-height: 420px; }
+  .about-lead { font-size: 1.1rem; }
+  footer { flex-direction: column; gap: 14px; text-align: center; padding: 26px 5vw; }
+}
+
+@media (max-width: 480px) {
+  .about-facts .fact { padding: 12px 10px; }
+  .about-facts .fact-val { font-size: 0.7rem; }
+  .about-facts .fact-label { font-size: 0.52rem; letter-spacing: 0.08em; }
+  .stat-val { font-size: 1.4rem; }
+  .project-name { font-size: 1rem; }
+  .stack-list { grid-template-columns: 1fr; gap: 2px; }
+  .stack-list dd { margin-bottom: 8px; }
+}
+@media (max-width: 400px) {
+  .hero-name { font-size: 2.2rem; }
+  .hero-tag { font-size: 0.64rem; }
+  .section-title { font-size: 1.15rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .scan-effect, #matrix-canvas { display: none; }
 }
 </style>
+<noscript><style>#loader{display:none!important} html.loading, html.loading body{overflow:auto!important}</style></noscript>
 </head>
 <body>
 
-<!-- LOADER -->
-<div id="loader">
-  <div class="loader-logo">NORGIL.DEV</div>
-  <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
-  <div class="loader-text" id="loaderText">Initializing secure connection...</div>
+<!-- ICON SPRITE (style Lucide) -->
+<svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-linkedin" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><path d="M2 8.82a15 15 0 0 1 20 0"/><line x1="12" x2="12.01" y1="20" y2="20"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
+  <symbol id="i-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></symbol>
+  <symbol id="i-terminal-sq" viewBox="0 0 24 24"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></symbol>
+  <symbol id="i-network" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></symbol>
+  <symbol id="i-bug" viewBox="0 0 24 24"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/></symbol>
+  <symbol id="i-cap" viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 24 24"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  <symbol id="i-server" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-radar" viewBox="0 0 24 24"><path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M4 6h.01"/><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/><path d="M12 18h.01"/><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/><circle cx="12" cy="12" r="2"/><path d="m13.41 10.59 5.66-5.66"/></symbol>
+</svg>
+
+<!-- LOADER : séquence de démarrage sécurisé -->
+<div id="loader" role="status" aria-live="polite" aria-label="Chargement du portfolio">
+  <div class="door door-top"></div>
+  <div class="door door-bottom"></div>
+  <canvas id="ldRain" aria-hidden="true"></canvas>
+  <div class="ld-seam"></div>
+
+  <div class="ld-hud">
+    <span class="ld-corner tl"></span><span class="ld-corner tr"></span>
+    <span class="ld-corner bl"></span><span class="ld-corner br"></span>
+
+    <div class="ld-top">
+      <span class="ld-title">SECURE BOOT // <b>NORGIL.DEV</b></span>
+      <span class="ld-right"><span>ABIDJAN · GMT <b id="ldClock">00:00:00</b></span><button class="ld-skip" id="ldSkip" type="button">Passer ›</button></span>
+    </div>
+
+    <div class="ld-center">
+      <div class="ld-dial">
+        <svg class="ld-rings" viewBox="0 0 300 300" aria-hidden="true">
+          <g id="ldTicks"></g>
+          <circle class="ld-r-out" cx="150" cy="150" r="128"/>
+          <circle class="ld-r-mid" cx="150" cy="150" r="120"/>
+          <circle class="ld-track" cx="150" cy="150" r="108"/>
+          <circle class="ld-arc" id="ldArc" cx="150" cy="150" r="108" transform="rotate(-90 150 150)" stroke-dasharray="678.6" stroke-dashoffset="678.6"/>
+          <circle class="ld-dot" id="ldDot" r="4.5" cx="150" cy="42"/>
+          <circle class="ld-r-in" cx="150" cy="150" r="92"/>
+        </svg>
+        <div class="ld-core">
+          <div class="ld-name" id="ldName" aria-hidden="true"></div>
+          <div class="ld-pct"><span id="ldPct">000</span><small>%</small></div>
+          <div class="ld-sub">DÉCRYPTAGE</div>
+        </div>
+        <div class="ld-granted">ACCESS<br>GRANTED<small>SESSION OUVERTE</small></div>
+      </div>
+      <div class="ld-status" id="ldStatus">Initialisation du noyau sécurisé...</div>
+      <div class="ld-bar"><i id="ldBar"></i></div>
+    </div>
+
+    <div class="ld-bottom">
+      <div class="ld-log" id="ldLog"></div>
+      <div class="ld-meta">LAT <b>5.3600 N</b> · LON <b>4.0083 W</b><br>SID <b id="ldSid">0000-0000</b> · TLS 1.3</div>
+    </div>
+  </div>
 </div>
 
 <!-- CUSTOM CURSOR -->
@@ -749,7 +1193,7 @@ footer {
 <!-- NAV -->
 <nav>
   <div class="nav-logo">NORGIL<span>.DEV</span></div>
-  <div class="nav-links">
+  <div class="nav-links" id="navLinks">
     <a href="#about">À Propos</a>
     <a href="#projects">Projets</a>
     <a href="#experience">Expérience</a>
@@ -760,7 +1204,8 @@ footer {
     <div class="status-dot"></div>
     <span>EN LIGNE // ABIDJAN, CI</span>
   </div>
-</nav><br>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false"><svg class="ic"><use href="#i-menu"/></svg></button>
+</nav>
 
 <!-- HERO -->
 <section id="hero">
@@ -784,11 +1229,11 @@ footer {
   </div>
   <div class="hero-stats">
     <div class="stat-item">
-      <div class="stat-val" data-count="3">0</div>
+      <div class="stat-val" data-count="3" data-count-of=".project-card">0</div>
       <div class="stat-label">Projets déployés</div>
     </div>
     <div class="stat-item">
-      <div class="stat-val" data-count="2">0</div>
+      <div class="stat-val" data-count="2" data-count-of=".cert-card:not(.planned)">0</div>
       <div class="stat-label">Certifications</div>
     </div>
     <div class="stat-item">
@@ -801,46 +1246,22 @@ footer {
     </div>
   </div>
 
-  <!-- Network decoration -->
-  <div class="hero-deco">
-    <svg class="network-svg" viewBox="0 0 380 380" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- edges -->
-      <line class="edge" x1="190" y1="190" x2="80" y2="90" stroke="#00ff88" stroke-width="0.8" opacity="0.4"/>
-      <line class="edge" x1="190" y1="190" x2="300" y2="80" stroke="#00ff88" stroke-width="0.8" opacity="0.4"/>
-      <line class="edge" x1="190" y1="190" x2="320" y2="250" stroke="#00eeff" stroke-width="0.8" opacity="0.4"/>
-      <line class="edge" x1="190" y1="190" x2="70" y2="280" stroke="#00eeff" stroke-width="0.8" opacity="0.4"/>
-      <line class="edge" x1="190" y1="190" x2="190" y2="50" stroke="#00ff88" stroke-width="0.8" opacity="0.4"/>
-      <line class="edge" x1="80" y1="90" x2="190" y2="50" stroke="#00ff88" stroke-width="0.5" opacity="0.2"/>
-      <line class="edge" x1="300" y1="80" x2="190" y2="50" stroke="#00ff88" stroke-width="0.5" opacity="0.2"/>
-      <line class="edge" x1="320" y1="250" x2="190" y2="330" stroke="#00eeff" stroke-width="0.5" opacity="0.2"/>
-      <line class="edge" x1="70" y1="280" x2="190" y2="330" stroke="#00eeff" stroke-width="0.5" opacity="0.2"/>
-      <!-- outer ring -->
-      <circle cx="190" cy="190" r="140" stroke="#0d3318" stroke-width="0.5" stroke-dasharray="4 4"/>
-      <circle cx="190" cy="190" r="90" stroke="#0d3318" stroke-width="0.5" stroke-dasharray="2 6"/>
-      <!-- nodes -->
-      <circle class="node" cx="190" cy="190" r="10" fill="#00ff88" opacity="0.9" filter="url(#glow)"/>
-      <circle class="node" cx="80" cy="90" r="6" fill="#00eeff" opacity="0.7"/>
-      <circle class="node" cx="300" cy="80" r="6" fill="#00eeff" opacity="0.7"/>
-      <circle class="node" cx="320" cy="250" r="6" fill="#00ff88" opacity="0.7"/>
-      <circle class="node" cx="70" cy="280" r="6" fill="#00ff88" opacity="0.7"/>
-      <circle class="node" cx="190" cy="50" r="5" fill="#ff9900" opacity="0.8"/>
-      <circle class="node" cx="190" cy="330" r="5" fill="#ff2244" opacity="0.8"/>
-      <!-- labels -->
-      <text x="196" y="194" fill="#00ff88" font-size="8" font-family="monospace" opacity="0.8">HOST</text>
-      <text x="55" y="88" fill="#00eeff" font-size="6.5" font-family="monospace" opacity="0.6">CLIENT</text>
-      <text x="306" y="78" fill="#00eeff" font-size="6.5" font-family="monospace" opacity="0.6">SERVER</text>
-      <text x="326" y="248" fill="#00ff88" font-size="6.5" font-family="monospace" opacity="0.6">WIFI</text>
-      <text x="30" y="278" fill="#00ff88" font-size="6.5" font-family="monospace" opacity="0.6">FIREWALL</text>
-      <text x="170" y="46" fill="#ff9900" font-size="6.5" font-family="monospace" opacity="0.8">INTERNET</text>
-      <text x="168" y="346" fill="#ff2244" font-size="6.5" font-family="monospace" opacity="0.8">ATTACKER</text>
-      <!-- glow filter -->
-      <defs>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="4" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
-    </svg>
+  <!-- Simulation réseau -->
+  <div class="hero-deco" aria-hidden="true">
+    <div class="net-frame">
+      <div class="net-head">
+        <span>SOC // <b>LIVE TOPOLOGY</b></span>
+        <span class="live"><i></i><span id="netStatus">MONITORING</span></span>
+      </div>
+      <canvas id="net-canvas"></canvas>
+      <div class="net-legend">
+        <span><i style="background:var(--green)"></i>flux légitime</span>
+        <span><i style="background:var(--red)"></i>attaque</span>
+        <span><i style="background:var(--orange)"></i>trafic suspect</span>
+        <span><i style="background:var(--cyan)"></i>copie miroir → IDS</span>
+      </div>
+      <div class="net-log" id="netLog"></div>
+    </div>
   </div>
 </section>
 
@@ -853,86 +1274,141 @@ footer {
   </div>
 
   <div class="about-grid">
-    <div class="terminal-box">
-      <div class="terminal-bar">
-        <div class="t-dot t-r"></div>
-        <div class="t-dot t-y"></div>
-        <div class="t-dot t-g"></div>
-        <span class="terminal-title">norgil@esatic:~$</span>
+    <div>
+      <div class="terminal-box">
+        <div class="terminal-bar">
+          <div class="t-dot t-r"></div>
+          <div class="t-dot t-y"></div>
+          <div class="t-dot t-g"></div>
+          <span class="terminal-title">norgil@esatic:~$</span>
+        </div>
+        <div class="terminal-body" id="aboutTerminal">
+          <div><span class="t-prompt">→ </span><span class="t-cmd">whoami</span></div>
+          <div class="t-output">Kouamé Norgil Symphorien Oussou</div>
+          <br>
+          <div><span class="t-prompt">→ </span><span class="t-cmd">cat profile.txt</span></div>
+          <div class="t-output"><span class="t-comment"># Statut</span></div>
+          <div class="t-output">Étudiant Licence — Systèmes &amp; Réseaux</div>
+          <div class="t-output">École : <span class="t-highlight">ESATIC</span>, Abidjan</div>
+          <div class="t-output">Rôle  : <span class="t-highlight">Formateur cybersécurité</span></div>
+          <br>
+          <div class="t-output"><span class="t-comment"># Passion</span></div>
+          <div class="t-output"><span class="t-highlight">Cybersécurité</span> // CTF // Pentest</div>
+          <div class="t-output">Architectures réseaux</div>
+          <div class="t-output">Développement web &amp; systèmes</div>
+          <br>
+          <div><span class="t-prompt">→ </span><span class="t-cmd">ping oknorgil@gmail.com</span></div>
+          <div class="t-output"><span class="t-highlight">PONG</span> — Réponse : <span class="t-warn">1ms</span> <svg class="ic t-warn"><use href="#i-zap"/></svg></div>
+          <br>
+          <div><span class="t-prompt">→ </span><span class="t-cmd">nmap --interests localhost</span></div>
+          <div class="t-output">22/tcp&nbsp;&nbsp;&nbsp;OPEN <span class="t-highlight">ssh</span>&nbsp;&nbsp;(Réseaux)</div>
+          <div class="t-output">80/tcp&nbsp;&nbsp;&nbsp;OPEN <span class="t-highlight">http</span> (Développement)</div>
+          <div class="t-output">443/tcp&nbsp;&nbsp;OPEN <span class="t-highlight">https</span> (Sécurité)</div>
+          <div class="t-output">9999/tcp OPEN <span class="t-warn">ctf</span>&nbsp;&nbsp;(Challenges)</div>
+          <div><span class="t-prompt">→ </span><span class="cursor-blink"></span></div>
+        </div>
       </div>
-      <div class="terminal-body">
-        <div><span class="t-prompt">→ </span><span class="t-cmd">whoami</span></div>
-        <div class="t-output">Kouame Norgil Symphorien Oussou</div>
-        <br>
-        <div><span class="t-prompt">→ </span><span class="t-cmd">cat profile.txt</span></div>
-        <div class="t-output"><span class="t-comment"># Statut</span></div>
-        <div class="t-output">Étudiant Licence 2 — Systèmes &amp; Réseaux</div>
-        <div class="t-output">École : <span class="t-highlight">ESATIC</span>, Abidjan</div>
-        <br>
-        <div class="t-output"><span class="t-comment"># Passion</span></div>
-        <div class="t-output"><span class="t-highlight">Cybersécurité</span> // CTF // Pentest</div>
-        <div class="t-output">Architectures réseaux</div>
-        <div class="t-output">Développement web &amp; systèmes</div>
-        <br>
-        <div><span class="t-prompt">→ </span><span class="t-cmd">ping oknorgil@gmail.com</span></div>
-        <div class="t-output"><span class="t-highlight">PONG</span> — Réponse: <span class="t-warn">1ms</span> ⚡</div>
-        <br>
-        <div><span class="t-prompt">→ </span><span class="t-cmd">nmap --interests localhost</span></div>
-        <div class="t-output">22/tcp OPEN <span class="t-highlight">ssh</span> (Réseaux)</div>
-        <div class="t-output">80/tcp OPEN <span class="t-highlight">http</span> (Développement)</div>
-        <div class="t-output">443/tcp OPEN <span class="t-highlight">https</span> (Sécurité)</div>
-        <div class="t-output">9999/tcp OPEN <span class="t-warn">ctf</span> (Challenges)</div>
-        <div><span class="t-prompt">→ </span><span class="cursor-blink"></span></div>
+
+      <div class="about-facts">
+        <div class="fact">
+          <svg class="ic"><use href="#i-cap"/></svg>
+          <div class="fact-val">ESATIC</div>
+          <div class="fact-label">Systèmes &amp; Réseaux</div>
+        </div>
+        <div class="fact">
+          <svg class="ic"><use href="#i-pin"/></svg>
+          <div class="fact-val">Abidjan</div>
+          <div class="fact-label">Côte d'Ivoire</div>
+        </div>
+        <div class="fact">
+          <svg class="ic"><use href="#i-flag"/></svg>
+          <div class="fact-val">CTF</div>
+          <div class="fact-label">Organisateur</div>
+        </div>
       </div>
     </div>
 
     <div>
-      <p style="font-size:0.85rem; color:var(--dim); line-height:1.9; margin-bottom:36px;">
-        Autonome, curieux et passionné, je vis la technologie comme un terrain de jeu infini.
-        Mon moteur : comprendre comment les systèmes fonctionnent, et comment les sécuriser.
-        Du packet sniffing au développement web, je construis des solutions concrètes.
+      <p class="about-lead">
+        Je comprends comment les systèmes fonctionnent pour mieux les <strong>attaquer</strong>, donc mieux les <strong>défendre</strong>.
       </p>
+      <p class="about-text">
+        Autonome, curieux et passionné, je vis la technologie comme un terrain de jeu infini.
+        Du packet sniffing au développement web, je construis des solutions concrètes, et je
+        transmets ce que j'apprends en formant d'autres étudiants au sein du Club Informatique de l'ESATIC.
+      </p>
+
+      <div class="pillars">
+        <div class="pillar">
+          <svg class="ic"><use href="#i-bug"/></svg>
+          <div>
+            <div class="pillar-title">Sécurité offensive</div>
+            <div class="pillar-desc">CTF, pentest, audit de sécurité</div>
+          </div>
+        </div>
+        <div class="pillar">
+          <svg class="ic"><use href="#i-shield-check"/></svg>
+          <div>
+            <div class="pillar-title">Défense réseau</div>
+            <div class="pillar-desc">Détection d'intrusion, supervision</div>
+          </div>
+        </div>
+        <div class="pillar">
+          <svg class="ic"><use href="#i-code"/></svg>
+          <div>
+            <div class="pillar-title">Développement</div>
+            <div class="pillar-desc">Web, Python, outils sur mesure</div>
+          </div>
+        </div>
+        <div class="pillar">
+          <svg class="ic"><use href="#i-users"/></svg>
+          <div>
+            <div class="pillar-title">Transmission</div>
+            <div class="pillar-desc">Formation, documentation, mentorat</div>
+          </div>
+        </div>
+      </div>
 
       <div class="skills-list">
         <div class="skill-item">
           <div class="skill-header">
-            <span class="skill-name">Cybersécurité / Pentest</span>
+            <span class="skill-name"><svg class="ic"><use href="#i-shield"/></svg>Cybersécurité / Pentest</span>
             <span class="skill-pct">70%</span>
           </div>
-          <div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div>
-          <div class="skill-tag">CTF · Audit · IDS/IPS</div>
+          <div class="skill-bar"><div class="skill-fill" data-level="70"></div></div>
+          <div class="skill-tag"><span>CTF</span><span>Audit</span><span>IDS/IPS</span><span>Scapy</span><span>arp-scan</span><span>TryHackMe</span><span>Sécurité web</span></div>
         </div>
         <div class="skill-item">
           <div class="skill-header">
-            <span class="skill-name">Réseaux &amp; Systèmes</span>
+            <span class="skill-name"><svg class="ic"><use href="#i-server"/></svg>Réseaux &amp; Systèmes</span>
             <span class="skill-pct">68%</span>
           </div>
-          <div class="skill-bar"><div class="skill-fill" style="width:68%"></div></div>
-          <div class="skill-tag">TCP/IP · VLAN · Linux · Windows Server</div>
+          <div class="skill-bar"><div class="skill-fill" data-level="68"></div></div>
+          <div class="skill-tag"><span>TCP/IP</span><span>VLAN</span><span>Linux</span><span>Windows Server</span><span>Switchs &amp; routeurs</span><span>Troubleshooting</span><span>Docker</span></div>
         </div>
         <div class="skill-item">
           <div class="skill-header">
-            <span class="skill-name">Développement Web</span>
+            <span class="skill-name"><svg class="ic"><use href="#i-code"/></svg>Développement Web</span>
             <span class="skill-pct">72%</span>
           </div>
-          <div class="skill-bar"><div class="skill-fill" style="width:72%"></div></div>
-          <div class="skill-tag">HTML · CSS · JS · Python</div>
+          <div class="skill-bar"><div class="skill-fill" data-level="72"></div></div>
+          <div class="skill-tag"><span>HTML</span><span>CSS</span><span>JS</span><span>Python</span><span>TypeScript</span><span>Next.js</span><span>Flask</span><span>Tailwind CSS</span><span>Firebase</span><span>Socket.IO</span><span>Git / GitHub</span></div>
         </div>
         <div class="skill-item">
           <div class="skill-header">
-            <span class="skill-name">Architecture Réseau</span>
+            <span class="skill-name"><svg class="ic"><use href="#i-network"/></svg>Architecture Réseau</span>
             <span class="skill-pct">75%</span>
           </div>
-          <div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div>
-          <div class="skill-tag">Cisco · Mikrotik · Wireshark</div>
+          <div class="skill-bar"><div class="skill-fill" data-level="75"></div></div>
+          <div class="skill-tag"><span>Cisco</span><span>Mikrotik</span><span>Wireshark</span><span>Architectures réseau</span><span>Déploiement d'actifs</span></div>
         </div>
         <div class="skill-item">
           <div class="skill-header">
-            <span class="skill-name">Gestion de projet</span>
+            <span class="skill-name"><svg class="ic"><use href="#i-users"/></svg>Gestion de projet</span>
             <span class="skill-pct">80%</span>
           </div>
-          <div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div>
-          <div class="skill-tag">Formation · Leadership · Documentation</div>
+          <div class="skill-bar"><div class="skill-fill" data-level="80"></div></div>
+          <div class="skill-tag"><span>Formation</span><span>Leadership</span><span>Documentation</span><span>Animation de modules</span><span>Suivi des apprenants</span><span>ITEtude</span></div>
         </div>
       </div>
     </div>
@@ -947,64 +1423,139 @@ footer {
   </div>
   <div class="projects-grid">
     <!-- Featured -->
-    <div class="project-card featured">
-      <div class="project-badge">⭐ Projet phare</div>
-      <div class="project-name">CTF-ESATIC Platform</div>
-      <div class="project-desc">
-        Plateforme Capture The Flag développée et déployée pour le Club Informatique de l'ESATIC.
-        Permet aux étudiants de s'entraîner aux challenges de cybersécurité en interne :
-        forensics, web, cryptographie, reverse engineering. Infrastructure complète, scoring en temps réel.
+    <div class="project-card wide featured">
+      <div class="wide-grid">
+        <div>
+          <div class="project-badges">
+            <div class="project-badge"><svg class="ic"><use href="#i-star"/></svg>Projet phare</div>
+            <div class="project-badge"><svg class="ic"><use href="#i-globe"/></svg>Live</div>
+            <div class="project-badge"><svg class="ic"><use href="#i-zap"/></svg>V2.1</div>
+          </div>
+          <div class="project-name">ITEtude</div>
+          <div class="project-sub">La boussole de l'apprenant pour l'IT francophone</div>
+          <div class="project-desc">
+            Plateforme de curation intelligente, dont je suis le fondateur et développeur. Elle transforme le
+            chaos informationnel en parcours d'apprentissage structurés, du débutant à l'expert, sur 9 domaines
+            de l'informatique.
+          </div>
+          <dl class="stack-list">
+            <dt>Framework</dt><dd>Next.js (App Router), TypeScript</dd>
+            <dt>Backend &amp; Auth</dt><dd>Firebase</dd>
+            <dt>IA</dt><dd>Genkit (Google Gemini)</dd>
+            <dt>Styling</dt><dd>Tailwind CSS &amp; shadcn/ui</dd>
+          </dl>
+          <div class="project-tags">
+            <span class="tag">Next.js</span>
+            <span class="tag">TypeScript</span>
+            <span class="tag">Firebase</span>
+            <span class="tag">Tailwind CSS</span>
+            <span class="tag">Genkit AI</span>
+            <span class="tag">Gemini</span>
+            <span class="tag">Sécurité web</span>
+          </div>
+          <div class="project-links">
+            <a href="https://www.itetude.com" target="_blank" class="proj-link" rel="noopener"><svg class="ic"><use href="#i-ext"/></svg>itetude.com</a>
+          </div>
+        </div>
+        <div>
+          <div class="feature-group">
+            <div class="feature-title">// Nouveautés V2.1</div>
+            <ul class="feature-list">
+              <li><svg class="ic"><use href="#i-check"/></svg><span><b>Feedbacks publics</b> : donner son avis sans créer de compte</span></li>
+              <li><svg class="ic"><use href="#i-check"/></svg><span><b>Participation</b> : soumettre les ressources et parcours que l'on possède pour faire évoluer la plateforme</span></li>
+              <li><svg class="ic"><use href="#i-check"/></svg><span><b>Emplois &amp; stages</b> : des offres pour connecter les apprenants au monde professionnel</span></li>
+              <li><svg class="ic"><use href="#i-check"/></svg><span><b>Recherche assistée par IA</b> : un assistant pédagogique basé sur Gemini pour trouver la ressource idéale</span></li>
+              <li><svg class="ic"><use href="#i-check"/></svg><span><b>Espace communautaire</b> : échanges en temps réel entre les membres</span></li>
+              <li><svg class="ic"><use href="#i-check"/></svg><span><b>Bloc-notes personnel</b> : astuces et commandes importantes enregistrées dans son espace</span></li>
+            </ul>
+          </div>
+          <div class="feature-group">
+            <div class="feature-title">// Fonctionnalités clés</div>
+            <ul class="feature-list">
+              <li><svg class="ic"><use href="#i-check"/></svg><span><b>Parcours d'apprentissage</b> : des chemins balisés pour passer de débutant à expert</span></li>
+              <li><svg class="ic"><use href="#i-check"/></svg><span><b>Ressources qualifiées</b> : articles, vidéos et docs triés sur le volet</span></li>
+              <li><svg class="ic"><use href="#i-check"/></svg><span><b>Tableau de bord</b> : progression, favoris et notes</span></li>
+              <li><svg class="ic"><use href="#i-check"/></svg><span><b>Filtrage avancé</b> : par difficulté, langue ou « poids data »</span></li>
+              <li><svg class="ic"><use href="#i-check"/></svg><span><b>Offres en Côte d'Ivoire</b> : accès direct aux offres locales pour passer à l'entreprise</span></li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <div class="project-tags">
-        <span class="tag">CTF</span>
-        <span class="tag">Cybersécurité</span>
-        <span class="tag">Web App</span>
-        <span class="tag">Vercel</span>
-        <span class="tag">Formation</span>
-      </div>
-      <div class="project-links">
-        <a href="https://ctf-esatic.vercel.app" target="_blank" class="proj-link">ctf-esatic.vercel.app</a>
-      </div>
-      <div class="project-icon">CTF</div>
     </div>
 
-    <div class="project-card">
-      <div class="project-badge">🌐 Live</div>
-      <div class="project-name">ITEtude</div>
-      <div class="project-desc">
-        Plateforme web qui collecte, organise et centralise des ressources pédagogiques pour les apprenants en informatique.
-        Un hub de connaissances structuré pour les étudiants.
+    <div class="project-card wide">
+      <div class="wide-grid">
+        <div>
+          <div class="project-badge"><svg class="ic"><use href="#i-globe"/></svg>Live</div>
+          <div class="project-name">CTF-ESATIC Platform</div>
+          <div class="project-sub">Plateforme Capture The Flag du Club Informatique</div>
+          <div class="project-desc">
+            Plateforme développée et déployée pour le Club Informatique de l'ESATIC. Elle permet aux étudiants
+            de s'entraîner en interne aux challenges de cybersécurité.
+          </div>
+          <div class="project-tags">
+            <span class="tag">CTF</span>
+            <span class="tag">Cybersécurité</span>
+            <span class="tag">Web App</span>
+            <span class="tag">Vercel</span>
+            <span class="tag">Formation</span>
+          </div>
+          <div class="project-links">
+            <a href="https://ctf-esatic.vercel.app" target="_blank" class="proj-link" rel="noopener"><svg class="ic"><use href="#i-ext"/></svg>ctf-esatic.vercel.app</a>
+          </div>
+        </div>
+        <div>
+          <div class="feature-title">// Caractéristiques</div>
+          <ul class="feature-list">
+            <li><svg class="ic"><use href="#i-check"/></svg><span><b>Challenges variés</b> : forensics, web, cryptographie, reverse engineering</span></li>
+            <li><svg class="ic"><use href="#i-check"/></svg><span><b>Scoring en temps réel</b> et infrastructure complète</span></li>
+            <li><svg class="ic"><use href="#i-check"/></svg><span><b>Usage en formation</b> : déployée pour 50+ étudiants du club</span></li>
+          </ul>
+        </div>
       </div>
-      <div class="project-tags">
-        <span class="tag">Web</span>
-        <span class="tag">Éducation</span>
-        <span class="tag">Ressources</span>
-      </div>
-      <div class="project-links">
-        <a href="https://www.itetude.com" target="_blank" class="proj-link">itetude.com</a>
-      </div>
-      <div class="project-icon">EDU</div>
     </div>
 
-    <div class="project-card">
-      <div class="project-badge">📡 Sécurité réseau</div>
-      <div class="project-name">MonWIFI</div>
-      <div class="project-desc">
-        Système de supervision de réseau sans fil en temps réel.
-        Détecte les attaques réseau (deauth, ARP spoofing, intrusions) et génère des alertes instantanées.
-        Monitoring passif intelligent.
+    <div class="project-card wide">
+      <div class="wide-grid">
+        <div>
+          <div class="project-badge"><svg class="ic"><use href="#i-radar"/></svg>Sécurité réseau</div>
+          <div class="project-name">VEAS NETWORK</div>
+          <div class="project-sub">Vue d'Ensemble, Analyse et Sécurité Réseau</div>
+          <div class="project-desc">
+            Outil local d'observabilité réseau. Il découvre les appareils du réseau local, mesure le trafic IP
+            et signale les schémas soutenus de scan de ports TCP dans un tableau de bord web.
+          </div>
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Flask</span>
+            <span class="tag">Scapy</span>
+            <span class="tag">arp-scan</span>
+            <span class="tag">Socket.IO</span>
+            <span class="tag">REST API</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Observabilité</span>
+            <span class="tag">IDS</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/5yn0r/VEAS_NETWORK" target="_blank" class="proj-link" rel="noopener"><svg class="ic"><use href="#i-github"/></svg>github.com/5yn0r/VEAS_NETWORK</a>
+          </div>
+        </div>
+        <div>
+          <div class="feature-title">// Fonctionnalités</div>
+          <ul class="feature-list">
+            <li><svg class="ic"><use href="#i-check"/></svg><span><b>Découverte</b> des appareils visibles sur le LAN avec arp-scan</span></li>
+            <li><svg class="ic"><use href="#i-check"/></svg><span><b>Capture du trafic IP</b> avec Scapy : volumes upload / download par IP locale</span></li>
+            <li><svg class="ic"><use href="#i-check"/></svg><span><b>Historique borné</b> de métadonnées de paquets (sans contenu), filtrable par IP, protocole, sens et port</span></li>
+            <li><svg class="ic"><use href="#i-check"/></svg><span><b>Alerte de scan de ports</b> uniquement après un nombre configurable de ports TCP SYN distincts dans une fenêtre de temps</span></li>
+            <li><svg class="ic"><use href="#i-check"/></svg><span><b>Instantanés REST</b> et mises à jour en direct via Socket.IO</span></li>
+          </ul>
+          <div class="project-note">
+            <svg class="ic"><use href="#i-shield"/></svg>
+            <span>À utiliser uniquement sur des réseaux que vous possédez ou êtes autorisé à administrer.
+            Volontairement en mémoire : un redémarrage efface appareils, trafic et alertes.</span>
+          </div>
+        </div>
       </div>
-      <div class="project-tags">
-        <span class="tag">Python</span>
-        <span class="tag">WiFi</span>
-        <span class="tag">IDS</span>
-        <span class="tag">Scapy</span>
-        <span class="tag">Sécurité</span>
-      </div>
-      <div class="project-links">
-        <span class="proj-link" style="cursor:default; color:var(--dim)">Projet local</span>
-      </div>
-      <div class="project-icon">NET</div>
     </div>
 
   </div>
@@ -1017,6 +1568,35 @@ footer {
     <div class="section-line"></div>
   </div>
   <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="tl-date">06/2026 — 08/2026</div>
+      <div class="tl-role">Stagiaire Technicien Réseau &amp; Système</div>
+      <div class="tl-org">ECOMET SARL · Stage · Abidjan</div>
+      <ul class="tl-desc">
+        <li>Définition des architectures réseau</li>
+        <li>Configuration réseau et système, déploiement d'actifs sur site et suivi</li>
+        <li>Configuration et troubleshooting de switchs et routeurs</li>
+        <li>Configuration et maintenance de serveurs Windows</li>
+        <li>Support IT auprès des utilisateurs</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="tl-date">01/2026 — Présent</div>
+      <div class="tl-role">Fondateur &amp; Développeur</div>
+      <div class="tl-org">ITEtude · <a href="https://www.itetude.com" target="_blank" rel="noopener" style="color:inherit">itetude.com</a> · Abidjan, Côte d'Ivoire</div>
+      <ul class="tl-desc">
+        <li>Conception, développement et mise en ligne de la plateforme, « la boussole de l'apprenant IT francophone » (Next.js, TypeScript, Firebase, Tailwind CSS)</li>
+        <li>V2.1 : recherche assistée par IA (Genkit / Gemini), espace communautaire en temps réel, bloc-notes personnel, offres d'emploi et de stage</li>
+        <li>Recherche informationnelle : curation et validation de ressources sur 9 domaines (web, cybersécurité, réseaux, cloud, IA…)</li>
+        <li>Création de parcours d'apprentissage structurés avec suivi de progression</li>
+        <li>Sécurité web : application des bonnes pratiques pour protéger la plateforme et ses utilisateurs</li>
+        <li>400+ utilisateurs actifs</li>
+      </ul>
+    </div>
+
     <div class="timeline-item">
       <div class="timeline-dot"></div>
       <div class="tl-date">10/2025 — 05/2026</div>
@@ -1046,7 +1626,7 @@ footer {
       <div class="timeline-dot"></div>
       <div class="tl-date">09/2024 — Présent</div>
       <div class="tl-role">Étudiant — Licence Systèmes &amp; Réseaux</div>
-      <div class="tl-org">ESATIC · Abidjan · Mention Assez Bien</div>
+      <div class="tl-org">ESATIC · Abidjan</div>
       <ul class="tl-desc">
         <li>Réseaux informatiques, cybersécurité, administration système</li>
         <li>Électronique, gestion de projet, développement logiciel</li>
@@ -1066,28 +1646,58 @@ footer {
 
   <div class="certs-grid">
     <div class="cert-card">
-      <div class="cert-icon">🔒</div>
-      <div class="cert-name">Cyber101</div>
-      <div class="cert-issuer">Fondamentaux de la cybersécurité</div>
-      <div class="cert-badge">Certifié</div>
+      <div class="cert-head">
+        <div class="cert-icon"><svg class="ic"><use href="#i-calendar"/></svg></div>
+        <div class="cert-badge">Certificat</div>
+      </div>
+      <div class="cert-name">Advent of Cyber 2025</div>
+      <div class="cert-desc">Événement annuel de cybersécurité : défis quotidiens, pratique en conditions réelles.</div>
+      <div class="cert-issuer">Délivré par <a href="https://tryhackme.com" target="_blank" rel="noopener">TryHackMe<svg class="ic"><use href="#i-ext"/></svg></a></div>
     </div>
     <div class="cert-card">
-      <div class="cert-icon">🐧</div>
-      <div class="cert-name">Linux Foundation</div>
-      <div class="cert-issuer">Administration système Linux</div>
-      <div class="cert-badge">Certifié</div>
+      <div class="cert-head">
+        <div class="cert-icon"><svg class="ic"><use href="#i-heart"/></svg></div>
+        <div class="cert-badge">Certificat</div>
+      </div>
+      <div class="cert-name">Love at First Breach CTF 2026</div>
+      <div class="cert-desc">CTF thématique en ligne : challenges de cybersécurité à résoudre en compétition.</div>
+      <div class="cert-issuer">Délivré par <a href="https://tryhackme.com" target="_blank" rel="noopener">TryHackMe<svg class="ic"><use href="#i-ext"/></svg></a></div>
     </div>
-    <div class="cert-card" style="border-style: dashed; opacity: 0.5;">
-      <div class="cert-icon">🎯</div>
+    <div class="cert-card">
+      <div class="cert-head">
+        <div class="cert-icon"><svg class="ic"><use href="#i-lock"/></svg></div>
+        <div class="cert-badge">Completion</div>
+      </div>
+      <div class="cert-name">Formation Cyber101</div>
+      <div class="cert-desc">Certificat de completion de la formation aux fondamentaux de la cybersécurité.</div>
+      <div class="cert-issuer">Délivré par <a href="https://www.cyber101.com/" target="_blank" rel="noopener">CYBER101<svg class="ic"><use href="#i-ext"/></svg></a></div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-head">
+        <div class="cert-icon"><svg class="ic"><use href="#i-terminal-sq"/></svg></div>
+        <div class="cert-badge">Certifié</div>
+      </div>
+      <div class="cert-name">Administration système Linux</div>
+      <div class="cert-desc">Certification en administration de systèmes Linux.</div>
+      <div class="cert-issuer">Délivré par <a href="https://www.linuxfoundation.org" target="_blank" rel="noopener">The Linux Foundation<svg class="ic"><use href="#i-ext"/></svg></a></div>
+    </div>
+    <div class="cert-card planned">
+      <div class="cert-head">
+        <div class="cert-icon"><svg class="ic"><use href="#i-target"/></svg></div>
+        <div class="cert-badge">En préparation</div>
+      </div>
       <div class="cert-name">CEH / OSCP</div>
-      <div class="cert-issuer">Objectif 2026</div>
-      <div class="cert-badge" style="color: var(--dim); border-color: var(--border);">En préparation</div>
+      <div class="cert-desc">Objectif 2026</div>
+      <div class="cert-issuer">Organismes : <b>EC-Council</b> · <b>OffSec</b></div>
     </div>
-    <div class="cert-card" style="border-style: dashed; opacity: 0.5;">
-      <div class="cert-icon">📡</div>
+    <div class="cert-card planned">
+      <div class="cert-head">
+        <div class="cert-icon"><svg class="ic"><use href="#i-network"/></svg></div>
+        <div class="cert-badge">En préparation</div>
+      </div>
       <div class="cert-name">CCNA</div>
-      <div class="cert-issuer">Cisco Networking</div>
-      <div class="cert-badge" style="color: var(--dim); border-color: var(--border);">En préparation</div>
+      <div class="cert-desc">Objectif : réseaux Cisco</div>
+      <div class="cert-issuer">Organisme : <b>Cisco</b></div>
     </div>
   </div>
 </section>
@@ -1109,29 +1719,32 @@ footer {
       </p>
       <div class="contact-items">
         <div class="contact-row">
-          <span class="contact-ico">✉</span>
+          <span class="contact-ico"><svg class="ic"><use href="#i-mail"/></svg></span>
           <span class="contact-val"><a href="mailto:oknorgil@gmail.com">oknorgil@gmail.com</a></span>
         </div>
         <div class="contact-row">
-          <span class="contact-ico">📞</span>
-          <span class="contact-val">+225 01 43 90 68 67</span>
+          <span class="contact-ico"><svg class="ic"><use href="#i-linkedin"/></svg></span>
+          <span class="contact-val"><a href="https://www.linkedin.com/in/kouame-oussou" target="_blank" rel="noopener">linkedin.com/in/kouame-oussou</a></span>
         </div>
         <div class="contact-row">
-          <span class="contact-ico">🔗</span>
-          <span class="contact-val"><a href="https://linkedin.com/in/kouame-norgil" target="_blank">linkedin.com/in/kouame-norgil</a></span>
+          <span class="contact-ico"><svg class="ic"><use href="#i-github"/></svg></span>
+          <span class="contact-val"><a href="https://github.com/5yn0r" target="_blank" rel="noopener">github.com/5yn0r</a></span>
         </div>
         <div class="contact-row">
-          <span class="contact-ico">📍</span>
-          <span class="contact-val">TreichVille, Abidjan, Côte d'Ivoire</span>
+          <span class="contact-ico"><svg class="ic"><use href="#i-pin"/></svg></span>
+          <span class="contact-val">Abidjan, Côte d'Ivoire</span>
         </div>
         <div class="contact-row">
-          <span class="contact-ico">⏱</span>
+          <span class="contact-ico"><svg class="ic"><use href="#i-clock"/></svg></span>
           <span class="contact-val" style="color:var(--green)">Disponible dès maintenant</span>
         </div>
       </div>
     </div>
-    <form class="contact-form" action="https://formspree.io/f/mjgljpqj" method="POST">
-      <input type="hidden" name="_subject" value="Nouveau message depuis le portfolio">
+    <form class="contact-form" action="https://formsubmit.co/ajax/oknorgil@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="Nouveau message depuis ton portfolio NORGIL.DEV">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <div class="form-group">
         <label class="form-label" for="contact-name">// Nom</label>
         <input id="contact-name" type="text" name="name" class="form-input" placeholder="Votre nom" required>
@@ -1145,6 +1758,19 @@ footer {
         <textarea id="contact-message" class="form-input" name="message" placeholder="Votre message..." required></textarea>
       </div>
       <button class="form-submit" type="submit">[ ENVOYER MESSAGE ]</button>
+      <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+
+      <div class="form-thanks" id="formThanks" aria-live="polite">
+        <div class="thanks-burst" id="thanksBurst"></div>
+        <svg class="thanks-check" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="23"/><path d="M15 27l8 8 15-17"/></svg>
+        <div class="thanks-title">MESSAGE TRANSMIS</div>
+        <p class="thanks-text" id="thanksText"></p>
+        <div class="thanks-log" id="thanksLog"></div>
+        <div class="thanks-actions">
+          <a href="#projects" class="btn-secondary">Voir mes projets</a>
+          <button type="button" class="btn-primary" id="thanksAgain">Nouveau message</button>
+        </div>
+      </div>
     </form>
 
   </div>
@@ -1153,6 +1779,11 @@ footer {
 <!-- FOOTER -->
 <footer>
   <div class="footer-copy">© 2026 Portfolio · <span style="color:var(--green)">NORGIL.DEV</span> · Tous droits réservés</div>
+  <div class="footer-social">
+    <a href="https://github.com/5yn0r" target="_blank" rel="noopener" aria-label="GitHub"><svg class="ic"><use href="#i-github"/></svg></a>
+    <a href="https://www.linkedin.com/in/kouame-oussou" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ic"><use href="#i-linkedin"/></svg></a>
+    <a href="mailto:oknorgil@gmail.com" aria-label="Email"><svg class="ic"><use href="#i-mail"/></svg></a>
+  </div>
 </footer>
 
 </div><!-- /wrapper -->
@@ -1167,39 +1798,161 @@ document.addEventListener('mousemove', e => {
   cursorDot.style.left = e.clientX + 'px';
   cursorDot.style.top = e.clientY + 'px';
 });
-document.querySelectorAll('a, button, .project-card').forEach(el => {
+document.querySelectorAll('a, button, .project-card, .cert-card, .pillar').forEach(el => {
   el.addEventListener('mouseenter', () => cursor.style.transform = 'translate(-50%,-50%) scale(1.8)');
   el.addEventListener('mouseleave', () => cursor.style.transform = 'translate(-50%,-50%) scale(1)');
 });
 
-// ── LOADER ──
-const loader = document.getElementById('loader');
-const fill = document.getElementById('loaderFill');
-const loaderText = document.getElementById('loaderText');
-const steps = [
-  'Initializing secure connection...',
-  'Loading cryptographic keys...',
-  'Scanning network topology...',
-  'Bypassing firewall (eth)...',
-  'Mounting portfolio...',
-  'Access granted ✓'
-];
-let pct = 0;
-let step = 0;
-const interval = setInterval(() => {
-  pct += Math.random() * 18 + 4;
-  if (pct > 100) pct = 100;
-  fill.style.width = pct + '%';
-  const si = Math.floor((pct / 100) * steps.length);
-  if (si !== step && si < steps.length) {
-    step = si;
-    loaderText.textContent = steps[step];
+// ── LOADER : séquence de démarrage sécurisé ──
+// Le hero et les compteurs attendent `revealed` (ouverture des portes) pour jouer leur entrée.
+let revealResolve;
+const revealed = new Promise(r => { revealResolve = r; });
+(function () {
+  const root = document.documentElement;
+  const loader = document.getElementById('loader');
+  const $ = id => document.getElementById(id);
+  const finishReveal = () => { root.classList.remove('loading'); revealResolve(); };
+  if (!loader) { finishReveal(); return; }
+
+  // mouvement réduit : simple fondu, pas de séquence
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    loader.style.transition = 'opacity 0.3s'; loader.style.opacity = '0';
+    setTimeout(() => loader.classList.add('gone'), 320);
+    finishReveal(); return;
   }
-  if (pct >= 100) {
-    clearInterval(interval);
-    setTimeout(() => loader.classList.add('hidden'), 400);
+
+  const nameEl = $('ldName'), pctEl = $('ldPct'), statusEl = $('ldStatus'), barEl = $('ldBar');
+  const arc = $('ldArc'), dot = $('ldDot'), ticksG = $('ldTicks'), logEl = $('ldLog');
+  const CIRC = 2 * Math.PI * 108, NAME = 'NORGIL.DEV', GLYPHS = '01#$%&*<>[]/\\ABCDEFXYZ';
+
+  // lettres du nom (décryptage)
+  const letters = [...NAME].map(ch => { const sp = document.createElement('span'); sp.textContent = ch; nameEl.appendChild(sp); return sp; });
+  // cadran : 72 graduations qui s'allument avec la progression
+  const NT = 72, ticks = [];
+  for (let i = 0; i < NT; i++) {
+    const a = (i / NT) * Math.PI * 2, r1 = i % 6 === 0 ? 132 : 136, r2 = 146;
+    const ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    ln.setAttribute('x1', 150 + Math.sin(a) * r1); ln.setAttribute('y1', 150 - Math.cos(a) * r1);
+    ln.setAttribute('x2', 150 + Math.sin(a) * r2); ln.setAttribute('y2', 150 - Math.cos(a) * r2);
+    ln.setAttribute('class', 'tk' + (i % 6 === 0 ? ' major' : ''));
+    ticksG.appendChild(ln); ticks.push(ln);
   }
-}, 120);
+  $('ldSid').textContent = [0, 1].map(() => Math.floor(Math.random() * 65536).toString(16).toUpperCase().padStart(4, '0')).join('-');
+
+  const nProj = document.querySelectorAll('.project-card').length;
+  const nCert = document.querySelectorAll('.cert-card:not(.planned)').length;
+  const STEPS = [
+    [0,  'Initialisation du noyau sécurisé...'],
+    [16, 'Handshake TLS 1.3 — clés échangées'],
+    [34, 'Scan du périmètre : 0 menace active'],
+    [52, 'Chargement des modules : réseau · cybersécurité · dev'],
+    [70, 'Synchronisation de la sonde VEAS IDS...'],
+    [86, 'Vérification des signatures... OK'],
+    [96, 'Ouverture de la session']
+  ];
+  const LOGS = [
+    [4,  'ok',   'Started secure-boot.service'],
+    [14, 'ok',   'Mounted /portfolio (read-only)'],
+    [26, 'ok',   'Started firewall.service — deny-all'],
+    [40, 'ok',   'Loaded projects (' + nProj + ')'],
+    [50, 'ok',   'Loaded certifications (' + nCert + ')'],
+    [60, 'warn', 'Intrusion attempt blocked — 203.0.113.66'],
+    [74, 'ok',   'Started veas-ids.service'],
+    [88, 'ok',   'Reached target portfolio.target']
+  ];
+  let stepIdx = -1, logIdx = 0;
+  function addLog(cls, txt) {
+    const d = document.createElement('div');
+    d.className = cls;
+    const em = document.createElement('em'); em.textContent = cls === 'warn' ? '[ WARN ]' : '[  OK  ]';
+    d.append(em, ' ' + txt);
+    logEl.appendChild(d);
+    while (logEl.children.length > 6) logEl.removeChild(logEl.firstChild);
+  }
+
+  // pluie de caractères qui s'intensifie avec la progression
+  const rain = $('ldRain'), rc = rain.getContext('2d');
+  let rcols = 0, drops = [];
+  function sizeRain() {
+    rain.width = innerWidth; rain.height = innerHeight;
+    rcols = Math.ceil(innerWidth / 16);
+    drops = Array.from({ length: rcols }, () => Math.random() * -50);
+  }
+  sizeRain(); addEventListener('resize', sizeRain);
+  let rainAcc = 0;
+  function stepRain(p) {
+    rc.fillStyle = 'rgba(7,22,13,0.16)'; rc.fillRect(0, 0, rain.width, rain.height);
+    rc.font = '14px "Share Tech Mono", monospace';
+    for (let i = 0; i < rcols; i++) {
+      const y = drops[i] * 16;
+      rc.fillStyle = Math.random() < 0.06 ? '#d8fff0' : 'rgba(0,255,136,' + (0.22 + p * 0.0035) + ')';
+      rc.fillText(GLYPHS[Math.floor(Math.random() * GLYPHS.length)], i * 16, y);
+      if (y > rain.height && Math.random() > 0.97) drops[i] = 0;
+      drops[i] += 0.55 + p * 0.008;
+    }
+  }
+
+  // ── progression : avance par à-coups, attend la vraie fin du chargement (polices + page) ──
+  let p = 0, ready = false, skip = false, finishing = false, last = 0, stall = 0, scrambleAt = 0, stallIdx = 0;
+  const STALLS = [[30, 0.2], [68, 0.26], [88, 0.18]];
+  Promise.all([
+    document.fonts && document.fonts.ready,
+    new Promise(r => document.readyState === 'complete' ? r() : addEventListener('load', r))
+  ]).then(() => { ready = true; });
+  setTimeout(() => { ready = true; }, 6000);                      // garde-fou (réseau lent / hors-ligne)
+  const startedAt = performance.now();
+  $('ldSkip').addEventListener('click', () => { skip = true; });
+  addEventListener('keydown', e => { if (!finishing && ['Escape', 'Enter', ' '].includes(e.key)) skip = true; });
+
+  const clockEl = $('ldClock');
+  const tickClock = () => { clockEl.textContent = new Date().toISOString().slice(11, 19); };
+  tickClock(); const clockTimer = setInterval(tickClock, 500);
+
+  function finish() {
+    finishing = true;
+    loader.classList.add('granted');                                // ACCESS GRANTED
+    setTimeout(() => loader.classList.add('cut'), 650);             // interface masquée + laser
+    setTimeout(() => { loader.classList.add('open'); finishReveal(); }, 1050);   // les portes s'ouvrent
+    setTimeout(() => { loader.classList.add('gone'); clearInterval(clockTimer); removeEventListener('resize', sizeRain); }, 2150);
+  }
+
+  function frame(now) {
+    const dt = Math.min((now - (last || now)) / 1000, 0.05); last = now;
+    if (!finishing) {
+      const cap = ready || skip ? 100 : 92;
+      if (stall > 0) stall -= dt;
+      else if (p < cap) {
+        const speed = skip ? 320 : (p >= 92 ? 120 : 56 + Math.random() * 18);
+        p = Math.min(cap, p + speed * dt);
+        if (!skip && stallIdx < STALLS.length && p >= STALLS[stallIdx][0]) { stall = STALLS[stallIdx][1]; stallIdx++; }
+      }
+      // rendu
+      const pi = Math.floor(p);
+      pctEl.textContent = String(pi).padStart(3, '0');
+      arc.setAttribute('stroke-dashoffset', (CIRC * (1 - p / 100)).toFixed(1));
+      const ang = (p / 100) * Math.PI * 2;
+      dot.setAttribute('cx', (150 + Math.sin(ang) * 108).toFixed(1));
+      dot.setAttribute('cy', (150 - Math.cos(ang) * 108).toFixed(1));
+      barEl.style.width = p + '%';
+      const on = Math.floor((p / 100) * NT);
+      ticks.forEach((t, i) => t.classList.toggle('on', i < on));
+      // décryptage du nom : chaque lettre se verrouille à son tour
+      if (now - scrambleAt > 60) {
+        scrambleAt = now;
+        letters.forEach((sp, i) => {
+          if (p >= ((i + 1) / letters.length) * 90) { sp.textContent = NAME[i]; sp.classList.add('lock'); }
+          else sp.textContent = NAME[i] === '.' && Math.random() < 0.5 ? '.' : GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+        });
+      }
+      while (stepIdx + 1 < STEPS.length && p >= STEPS[stepIdx + 1][0]) { stepIdx++; statusEl.textContent = STEPS[stepIdx][1]; }
+      while (logIdx < LOGS.length && p >= LOGS[logIdx][0]) { addLog(LOGS[logIdx][1], LOGS[logIdx][2]); logIdx++; }
+      rainAcc += dt; if (rainAcc > 0.033) { rainAcc = 0; stepRain(p); }
+      if (p >= 100 && performance.now() - startedAt > 1700) finish();   // durée minimale pour que la séquence soit lisible
+    }
+    if (!loader.classList.contains('gone')) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
 
 // ── MATRIX RAIN ──
 const canvas = document.getElementById('matrix-canvas');
@@ -1216,7 +1969,7 @@ let cols = Math.floor(canvas.width / fontSize);
 let drops = Array(cols).fill(1);
 
 function drawMatrix() {
-  ctx.fillStyle = 'rgba(3,13,7,0.05)';
+  ctx.fillStyle = 'rgba(7,22,13,0.05)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = '#00ff88';
   ctx.font = fontSize + 'px Share Tech Mono';
@@ -1230,6 +1983,9 @@ function drawMatrix() {
 setInterval(drawMatrix, 60);
 
 // ── COUNTER ANIMATION ──
+document.querySelectorAll('[data-count-of]').forEach(el => {
+  el.dataset.count = document.querySelectorAll(el.dataset.countOf).length;
+});
 function animateCounters() {
   document.querySelectorAll('[data-count]').forEach(el => {
     const target = parseInt(el.dataset.count);
@@ -1243,13 +1999,14 @@ function animateCounters() {
   });
 }
 
-// ── INTERSECTION OBSERVER ──
+// ── SECTION REVEAL ──
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      if (entry.target.id === 'hero') animateCounters();
+      if (entry.target.id === 'hero') revealed.then(animateCounters);
       entry.target.style.opacity = '1';
       entry.target.style.transform = 'translateY(0)';
+      observer.unobserve(entry.target);
     }
   });
 }, { threshold: 0.1 });
@@ -1261,14 +2018,596 @@ document.querySelectorAll('section').forEach(s => {
   observer.observe(s);
 });
 
-// ── FORM SUBMIT ──
+// ── ABOUT : terminal séquentiel + barres de compétences ──
+const termLines = document.querySelectorAll('#aboutTerminal > *');
+termLines.forEach((l, i) => { l.style.opacity = '0'; l.dataset.i = i; });
+const aboutObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    if (entry.target.id === 'aboutTerminal') {
+      termLines.forEach(l => setTimeout(() => {
+        l.style.transition = 'opacity 0.25s';
+        l.style.opacity = '1';
+      }, l.dataset.i * 110));
+    } else {
+      entry.target.style.width = entry.target.dataset.level + '%';
+    }
+    aboutObs.unobserve(entry.target);
+  });
+}, { threshold: 0.3 });
+aboutObs.observe(document.getElementById('aboutTerminal'));
+document.querySelectorAll('.skill-fill').forEach(f => aboutObs.observe(f));
+
+// ── NAV : menu mobile + lien actif ──
+const navLinks = document.getElementById('navLinks');
+const navToggle = document.getElementById('navToggle');
+navToggle.addEventListener('click', () => {
+  const open = navLinks.classList.toggle('open');
+  navToggle.setAttribute('aria-expanded', open);
+  navToggle.firstElementChild.firstElementChild.setAttribute('href', open ? '#i-x' : '#i-menu');
+});
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  navLinks.classList.remove('open');
+  navToggle.firstElementChild.firstElementChild.setAttribute('href', '#i-menu');
+}));
+const navObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    navLinks.querySelectorAll('a').forEach(a =>
+      a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id));
+  });
+}, { rootMargin: '-45% 0px -50% 0px' });
+document.querySelectorAll('section[id]').forEach(s => navObs.observe(s));
+
+// ── HERO : SIMULATION RÉSEAU ──
+// Architecture : Internet → FIREWALL (périmètre) → { DMZ (web) | LAN (switch → postes, AD, Wi-Fi) }
+// Une sonde VEAS IDS reçoit une copie miroir (TAP) du trafic du firewall et du switch.
+// Chaque paquet suit un chemin réel, saut par saut ; le firewall décide à chaque passage.
+(function () {
+  const cv = document.getElementById('net-canvas');
+  if (!cv) return;
+  const c = cv.getContext('2d');
+  const logEl = document.getElementById('netLog');
+  const statusEl = document.getElementById('netStatus');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const W = 460, TAU = Math.PI * 2;
+  const GREEN = '#00ff88', CYAN = '#00eeff', RED = '#ff2244', ORANGE = '#ff9900';
+  const ATTACKER_IP = '203.x.113.yy';      // plage de documentation (RFC 5737)
+  const DIMG = '#2a7a4d';                  // botnet au repos
+
+  // ── Icônes (tracés Lucide) ──
+  const P = a => a.map(d => new Path2D(d));
+  const ICON = {
+    shieldCheck: P(['M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z', 'm9 12 2 2 4-4']),
+    flame: P(['M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z']),
+    cloud: P(['M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z']),
+    server: P(['M4 2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z', 'M4 14h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2z', 'M6 6h.01', 'M6 18h.01']),
+    network: P(['M17 16h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z', 'M3 16h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z', 'M10 2h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z', 'M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3', 'M12 12V8']),
+    monitor: P(['M4 3h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z', 'M8 21h8', 'M12 17v4']),
+    wifi: P(['M5 13a10 10 0 0 1 14 0', 'M8.5 16.5a5 5 0 0 1 7 0', 'M2 8.82a15 15 0 0 1 20 0', 'M12 20h.01']),
+    bug: P(['m8 2 1.88 1.88', 'M14.12 3.88 16 2', 'M9 7.13v-1a3.003 3.003 0 1 1 6 0v1', 'M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6', 'M12 20v-9', 'M6.53 9C4.6 8.8 3 7.1 3 5', 'M6 13H2', 'M3 21c0-2.1 1.7-3.9 3.8-4', 'M20.97 5c0 2.1-1.6 3.8-3.5 4', 'M22 13h-4', 'M17.2 17c2.1.1 3.8 1.9 3.8 4'])
+  };
+
+  // ── Topologie ──
+  const N = {};
+  [
+    ['attacker', 'ATTACKER',  60,  56, 19, RED,    ICON.bug,         1.2],
+    ['internet', 'INTERNET',  230, 56, 19, CYAN,   ICON.cloud,       1.0],
+    ['firewall', 'FIREWALL',  230, 150, 21, ORANGE, ICON.flame,       0.6],
+    ['web',      'WEB-DMZ',   392, 150, 19, CYAN,   ICON.server,      0.9],
+    ['switch',   'SWITCH',    230, 255, 19, GREEN,  ICON.network,     0.5],
+    ['ids',      'VEAS IDS',  392, 255, 23, GREEN,  ICON.shieldCheck, 0.4],
+    ['client',   'CLIENT',    80,  368, 19, GREEN,  ICON.monitor,     1.1],
+    ['server',   'AD SERVER', 230, 375, 19, GREEN,  ICON.server,      0.8],
+    ['wifi',     'WIFI AP',   380, 368, 19, GREEN,  ICON.wifi,        0.9],
+    ['bot1',     '',          312, 42,  9,  DIMG,   ICON.bug,         1.2],
+    ['bot2',     '',          365, 68,  9,  DIMG,   ICON.bug,         1.3],
+    ['bot3',     '',          418, 42,  9,  DIMG,   ICON.bug,         1.1]
+  ].forEach(([id, label, x, y, r, color, icon, depth], i) => {
+    N[id] = { id, label, x, y, r, color, icon, depth, px: x, py: y, flash: 0, flashColor: RED, seed: i * 1.7 };
+  });
+  const nodes = Object.values(N);
+
+  // kind : 'link' = lien réel, 'mirror' = copie de trafic (TAP / SPAN) vers la sonde
+  const EDGES = [
+    { a: 'attacker', b: 'internet', color: RED,   kind: 'link' },
+    { a: 'internet', b: 'firewall', color: CYAN,  kind: 'link' },
+    { a: 'firewall', b: 'web',      color: CYAN,  kind: 'link' },
+    { a: 'firewall', b: 'switch',   color: GREEN, kind: 'link' },
+    { a: 'switch',   b: 'client',   color: GREEN, kind: 'link' },
+    { a: 'switch',   b: 'server',   color: GREEN, kind: 'link' },
+    { a: 'switch',   b: 'wifi',     color: GREEN, kind: 'link' },
+    { a: 'bot1',     b: 'internet', color: RED,   kind: 'link', bot: true },
+    { a: 'bot2',     b: 'internet', color: RED,   kind: 'link', bot: true },
+    { a: 'bot3',     b: 'internet', color: RED,   kind: 'link', bot: true },
+    { a: 'firewall', b: 'ids',      color: CYAN,  kind: 'mirror' },
+    { a: 'switch',   b: 'ids',      color: CYAN,  kind: 'mirror' }
+  ];
+  const edgeOf = (a, b) => EDGES.find(e => (e.a === a.id && e.b === b.id) || (e.a === b.id && e.b === a.id));
+
+  // ── État ──
+  const fw = { blocked: false };               // règle dynamique BLOCK sur l'IP de l'attaquant
+  // DDoS : phase de défense du firewall ('off' | 'flood' | 'limit' | 'block'), k = intensité de la charge
+  const ddos = { flooding: false, phase: 'off', k: 0, acc: 0 };
+  let botsActive = false;
+  const packets = [], rings = [], sparks = [], tasks = [];
+  let clock = 0, statusUntil = 0, scale = 1, fs = 1, mx = 0, my = 0, tmx = 0, tmy = 0;
+  const F = px => (px * fs).toFixed(1) + 'px "Share Tech Mono", monospace';   // police lisible même quand le canvas est réduit
+  let nextFlow = 0, nextLog = 1.5, nextScenario = 4, sIdx = 0, running = false, last = 0, raf = 0;
+
+  function resize() {
+    const r = cv.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(r.width * dpr);
+    cv.height = Math.round(r.height * dpr);
+    scale = cv.width / W;
+    fs = Math.max(1, (W / r.width) * 0.95);        // ≥ ~8,5 px à l'écran
+    if (!running) frame(performance.now());
+  }
+  new ResizeObserver(resize).observe(cv);
+  const frameEl = cv.closest('.net-frame');
+  frameEl.addEventListener('mousemove', e => {
+    const r = cv.getBoundingClientRect();
+    tmx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+    tmy = ((e.clientY - r.top) / r.height - 0.5) * 2;
+  });
+  frameEl.addEventListener('mouseleave', () => { tmx = 0; tmy = 0; });
+
+  // ── Journal / statut / planificateur ──
+  function log(cls, msg) {
+    const d = document.createElement('div');
+    d.className = cls;
+    d.textContent = '[' + new Date().toTimeString().slice(0, 8) + '] ' + msg;
+    logEl.appendChild(d);
+    while (logEl.children.length > 5) logEl.removeChild(logEl.firstChild);
+  }
+  function setStatus(text, color, dur) {
+    statusEl.textContent = text; statusEl.style.color = color || '';
+    statusUntil = clock + dur / 1000;           // dur en ms
+  }
+  const schedule = (delay, fn) => tasks.push({ at: clock + delay, fn });
+  const flash = (n, color) => { n.flash = 1; n.flashColor = color; };
+  const ringAt = (n, color) => rings.push({ x: n.px, y: n.py, age: 0, color });
+  function dropAt(n, light) {
+    if (light) {                                // flux massif : effet discret
+      if (Math.random() < 0.15) ringAt(n, RED);
+      sparks.push({ x: n.px, y: n.py, vx: (Math.random() - 0.5) * 70, vy: (Math.random() - 0.5) * 70, life: 1 });
+      flash(n, RED);
+      return;
+    }
+    ringAt(n, RED);
+    for (let i = 0; i < 7; i++) {
+      const a = Math.random() * TAU, v = 25 + Math.random() * 45;
+      sparks.push({ x: n.px, y: n.py, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1 });
+    }
+    flash(n, RED);
+  }
+
+  // ── Paquets : chemin réel, saut par saut ──
+  function spawn(ids, o) {
+    const p = Object.assign({ ids, path: ids.map(i => N[i]), i: 0, d: 0, v: 120, wait: 0, size: 2, at: {} }, o);
+    packets.push(p);
+    return p;
+  }
+  function mirrorFrom(node) {                   // copie du trafic vers la sonde
+    if (packets.filter(p => p.mirror).length < 10)
+      spawn([node.id, 'ids'], { mirror: true, v: 190, size: 1.5, color: CYAN });
+  }
+  // renvoie true si le paquet continue son chemin
+  function arrive(p, node) {
+    p.i++; p.d = 0;
+    if (!p.mirror && (node === N.firewall || node === N.switch)) mirrorFrom(node);
+    const hook = p.at[node.id];
+    if (hook && hook(p) === 'drop') { dropAt(node, p.light); return false; }   // le firewall rejette
+    if (p.i >= p.path.length - 1) {
+      if (p.hostile) ringAt(node, p.color);
+      if (p.reply) spawn(p.ids.slice().reverse(), { v: p.v });        // la réponse suit le chemin inverse
+      return false;
+    }
+    return true;
+  }
+
+  // ── Trafic légitime (tout passe par le firewall pour sortir / entrer) ──
+  const FLOWS = [
+    { ids: ['client', 'switch', 'firewall', 'internet'], w: 3, msg: ['ok',   'CLIENT → INTERNET  HTTPS via FIREWALL (NAT)'] },
+    { ids: ['internet', 'firewall', 'web'],              w: 3, msg: ['ok',   'INTERNET → WEB-DMZ  HTTPS 443 autorisé'] },
+    { ids: ['client', 'switch', 'server'],               w: 2, msg: ['ok',   'CLIENT → AD SERVER  Kerberos / SMB'] },
+    { ids: ['wifi', 'switch', 'firewall', 'internet'],   w: 2, msg: ['info', 'WIFI AP → INTERNET  VLAN 20 filtré par FIREWALL'] },
+    { ids: ['wifi', 'switch', 'server'],                 w: 1, msg: ['info', 'WIFI AP → AD SERVER  authentification 802.1X'] }
+  ];
+  function spawnFlow() {
+    if (packets.length > 16) return;
+    const pool = FLOWS.filter(f => !(N.client.isolated && f.ids.includes('client')));
+    const total = pool.reduce((s, f) => s + f.w, 0);
+    let r = Math.random() * total, f = pool[0];
+    for (const x of pool) { if ((r -= x.w) <= 0) { f = x; break; } }
+    spawn(f.ids, { reply: true });
+    if (clock > nextLog) { log(f.msg[0], f.msg[1]); nextLog = clock + 2 + Math.random() * 1.5; }
+  }
+
+  // ── Scénarios : chaque attaque traverse réellement l'architecture ──
+  // 1) Scan de ports : rejeté au périmètre (deny-all)
+  function scanScenario() {
+    log('bad', 'ALERT  ATTACKER → WAN : scan de ports SYN');
+    setStatus('INTRUSION DETECTED', RED, 3400); flash(N.attacker, RED);
+    let done = false;
+    for (let i = 0; i < 5; i++) spawn(['attacker', 'internet', 'firewall'], {
+      color: RED, v: 150, hostile: true, wait: i * 0.16,
+      at: { firewall: () => {
+        if (!done) {
+          done = true;
+          log('ok', 'FIREWALL  DROP tcp/22,80,443,3389 (deny-all)');
+          schedule(0.5, () => { log('info', 'IDS  scan de ports détecté (5 SYN / 1 s)'); flash(N.ids, CYAN); });
+          setStatus('THREAT BLOCKED', GREEN, 2600);
+        }
+        return 'drop';
+      } }
+    });
+  }
+  // 2) Injection SQL : le port 443 est autorisé → atteint la DMZ → l'IDS détecte → le firewall bloque
+  function sqliScenario() {
+    log('bad', 'ALERT  ATTACKER → WEB-DMZ : requêtes HTTPS suspectes');
+    setStatus('INTRUSION DETECTED', RED, 4200); flash(N.attacker, RED);
+    const path = ['attacker', 'internet', 'firewall', 'web'];
+    let hit = false;
+    for (let i = 0; i < 3; i++) spawn(path, {
+      color: RED, v: 150, hostile: true, wait: i * 0.2,
+      at: {
+        firewall: () => fw.blocked ? 'drop' : 'pass',
+        web: () => {
+          flash(N.web, RED);
+          if (hit) return;
+          hit = true;
+          log('bad', "WEB-DMZ  payload SQLi reçu (' OR 1=1 --)");
+          schedule(0.7, () => { log('info', 'IDS  signature SQLi détectée (rule 2101)'); flash(N.ids, CYAN); });
+          schedule(1.6, () => {
+            fw.blocked = true; ringAt(N.firewall, GREEN);
+            log('ok', 'FIREWALL  règle auto : BLOCK ' + ATTACKER_IP);
+            setStatus('AUTO-BLOCK', GREEN, 3600);
+          });
+          schedule(2.8, () => {
+            log('bad', 'ATTACKER  nouvelle tentative');
+            let msg = false;
+            for (let j = 0; j < 3; j++) spawn(path, {
+              color: RED, v: 150, hostile: true, wait: j * 0.2,
+              at: { firewall: () => {
+                if (!msg) { msg = true; log('ok', 'FIREWALL  DROP — attaquant bloqué'); }
+                return 'drop';
+              } }
+            });
+          });
+          schedule(7.5, () => { fw.blocked = false; log('info', 'FIREWALL  règle expirée (TTL)'); });
+        }
+      }
+    });
+  }
+  // 3) Poste compromis : beacon C2 sortant → IDS → blocage egress → quarantaine du poste
+  function c2Scenario() {
+    log('bad', 'ALERT  CLIENT : trafic sortant suspect (beacon C2)');
+    flash(N.client, ORANGE); setStatus('SUSPICIOUS OUTBOUND', ORANGE, 4200);
+    spawn(['client', 'switch', 'firewall', 'internet', 'attacker'], {
+      color: ORANGE, v: 130, hostile: true,
+      at: { firewall: () => fw.blocked ? 'drop' : 'pass', attacker: () => flash(N.attacker, ORANGE) }
+    });
+    schedule(1.8, () => { log('info', 'IDS  beacon périodique vers ' + ATTACKER_IP); flash(N.ids, CYAN); });
+    schedule(3.0, () => {
+      fw.blocked = true; ringAt(N.firewall, GREEN);
+      log('ok', 'FIREWALL  egress : BLOCK ' + ATTACKER_IP);
+      setStatus('AUTO-BLOCK', GREEN, 3600);
+      spawn(['client', 'switch', 'firewall'], {
+        color: ORANGE, v: 130, hostile: true,
+        at: { firewall: () => { log('ok', 'FIREWALL  DROP beacon sortant'); return 'drop'; } }
+      });
+    });
+    schedule(5.8, () => { N.client.isolated = true; log('ok', 'SWITCH  port CLIENT isolé (VLAN quarantaine)'); });
+    schedule(10.5, () => {
+      N.client.isolated = false; fw.blocked = false;
+      log('ok', 'CLIENT  remédié — retour au VLAN 10'); flash(N.client, GREEN);
+    });
+  }
+  // 4) DDoS : botnet → flood HTTPS sur la DMZ → saturation → l'IDS détecte → rate-limit → blocklist
+  function ddosScenario() {
+    log('bad', 'ALERT  BOTNET → WEB-DMZ : afflux massif de requêtes HTTPS');
+    setStatus('DDoS DETECTED', RED, 4200);
+    botsActive = true; ddos.flooding = true; ddos.phase = 'flood';
+    ['bot1', 'bot2', 'bot3'].forEach(b => flash(N[b], RED));
+    schedule(2.2, () => { log('info', 'IDS  volume anormal : 12 400 req/s vers WEB-DMZ'); flash(N.ids, CYAN); });
+    schedule(3.0, () => { log('bad', 'WEB-DMZ  saturation CPU — latence en hausse'); flash(N.web, RED); });
+    schedule(3.8, () => {
+      ddos.phase = 'limit'; ringAt(N.firewall, GREEN);
+      log('ok', 'FIREWALL  rate-limit + SYN cookies activés');
+      setStatus('MITIGATING', ORANGE, 2600);
+    });
+    schedule(5.4, () => {
+      ddos.phase = 'block'; ringAt(N.firewall, GREEN);
+      log('ok', 'FIREWALL  blocklist auto : 3 200 IP du botnet');
+      setStatus('AUTO-BLOCK', GREEN, 3600);
+    });
+    schedule(7.4, () => { ddos.flooding = false; botsActive = false; log('info', 'BOTNET  flux tari — attaque terminée'); });
+    schedule(8.6, () => log('ok', 'WEB-DMZ  charge normale — service rétabli'));
+    schedule(10.6, () => { ddos.phase = 'off'; log('info', 'FIREWALL  blocklist expirée (TTL)'); });
+  }
+  function floodPacket() {
+    if (packets.length > 70) return;
+    const bot = 'bot' + (1 + Math.floor(Math.random() * 3));
+    spawn([bot, 'internet', 'firewall', 'web'], {
+      color: RED, v: 230, size: 1.6, light: true,
+      at: { firewall: () => {
+        if (ddos.phase === 'flood') return 'pass';                       // tout passe : le serveur sature
+        if (ddos.phase === 'limit') return Math.random() < 0.85 ? 'drop' : 'pass';
+        return 'drop';
+      } }
+    });
+  }
+  const SCENARIOS = [{ run: scanScenario, dur: 5 }, { run: sqliScenario, dur: 9 }, { run: c2Scenario, dur: 11 }, { run: ddosScenario, dur: 12 }];
+
+  // ── Dessin ──
+  function rr(x, y, w, h, r) {
+    c.beginPath(); c.moveTo(x + r, y);
+    c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
+    c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+  }
+  function zone(x, y, w, h, label, rgb) {
+    rr(x, y, w, h, 6);
+    c.fillStyle = 'rgba(' + rgb + ',0.035)'; c.fill();
+    c.strokeStyle = 'rgba(' + rgb + ',0.16)'; c.lineWidth = 1;
+    c.setLineDash([3, 4]); c.stroke(); c.setLineDash([]);
+    c.fillStyle = 'rgba(' + rgb + ',0.55)'; c.font = F(8);
+    c.textAlign = 'left'; c.fillText(label, x + 8, y + 13);
+  }
+  function drawNode(n, t) {
+    const hot = n.flash > 0.05;
+    const col = hot ? n.flashColor : (n.isolated ? ORANGE : n.color);
+    c.save();
+    c.shadowColor = col; c.shadowBlur = 12 + n.flash * 22;
+    c.fillStyle = '#0b1e12'; c.strokeStyle = col; c.lineWidth = 1.5;
+    if (n.isolated) c.setLineDash([4, 3]);
+    c.beginPath(); c.arc(n.px, n.py, n.r, 0, TAU); c.fill(); c.stroke();
+    c.restore();
+    if (n === N.ids) {                          // pulsation de la sonde
+      const k = (t * 0.6) % 1;
+      c.strokeStyle = 'rgba(0,255,136,' + (0.45 * (1 - k)) + ')'; c.lineWidth = 1;
+      c.beginPath(); c.arc(n.px, n.py, n.r + 4 + k * 22, 0, TAU); c.stroke();
+    }
+    const k = (n.r * 1.05) / 24;
+    c.save();
+    c.translate(n.px - 12 * k, n.py - 12 * k); c.scale(k, k);
+    c.strokeStyle = col; c.lineWidth = 2; c.lineCap = 'round'; c.lineJoin = 'round';
+    n.icon.forEach(p => c.stroke(p));
+    c.restore();
+    c.fillStyle = hot ? n.flashColor : (n.isolated ? ORANGE : '#5f9a75');
+    c.font = F(9); c.textAlign = 'center';
+    if (n.label) c.fillText(n.isolated ? n.label + ' · ISOLÉ' : n.label, n.px, n.py + n.r + 13);
+  }
+
+  function frame(now) {
+    const dt = last ? Math.min((now - last) / 1000, 0.05) : 0;
+    last = now;
+    if (!reduce) clock += dt;
+    const t = clock;
+
+    for (let i = tasks.length - 1; i >= 0; i--) {
+      if (tasks[i].at <= t) { const f = tasks[i].fn; tasks.splice(i, 1); f(); }
+    }
+    mx += (tmx - mx) * 0.08; my += (tmy - my) * 0.08;
+    const kTarget = !ddos.flooding ? 0 : ddos.phase === 'flood' ? 0.85 : ddos.phase === 'limit' ? 0.5 : 0.1;
+    ddos.k += (kTarget - ddos.k) * Math.min(1, dt * 1.5);
+    ['bot1', 'bot2', 'bot3'].forEach(b => { N[b].color = botsActive ? RED : DIMG; });
+    nodes.forEach(n => {
+      n.px = n.x + Math.sin(t * 0.9 + n.seed) * 1.6 + mx * 6 * n.depth;
+      n.py = n.y + Math.cos(t * 0.8 + n.seed) * 1.6 + my * 6 * n.depth;
+      n.flash = Math.max(0, n.flash - dt * 1.6);
+    });
+
+    if (!reduce) {
+      if (t > nextFlow) { spawnFlow(); nextFlow = t + 0.45 + Math.random() * 0.5; }
+      if (ddos.flooding) { ddos.acc += dt; while (ddos.acc > 0.07) { ddos.acc -= 0.07; floodPacket(); } }
+      if (t > nextScenario) {
+        const sc = SCENARIOS[sIdx++ % SCENARIOS.length];
+        sc.run();
+        nextScenario = t + sc.dur + 3 + Math.random() * 2;
+      }
+      if (statusUntil && t > statusUntil) { statusUntil = 0; statusEl.textContent = 'MONITORING'; statusEl.style.color = ''; }
+    }
+
+    c.setTransform(scale, 0, 0, scale, 0, 0);
+    c.clearRect(0, 0, W, W);
+
+    // grille
+    c.strokeStyle = 'rgba(0,255,136,0.04)'; c.lineWidth = 1;
+    for (let i = 20; i < W; i += 40) {
+      c.beginPath(); c.moveTo(i, 0); c.lineTo(i, W); c.stroke();
+      c.beginPath(); c.moveTo(0, i); c.lineTo(W, i); c.stroke();
+    }
+    // zones
+    zone(12, 12, 436, 86, 'WAN · INTERNET', '0,238,255');
+    zone(336, 112, 112, 84, 'DMZ', '255,153,0');
+    zone(12, 206, 436, 226, 'LAN · 192.168.10.0/24', '0,255,136');
+    // ligne de périmètre
+    c.strokeStyle = 'rgba(255,153,0,0.28)'; c.lineWidth = 1; c.setLineDash([6, 4]);
+    c.beginPath(); c.moveTo(12, N.firewall.py); c.lineTo(336, N.firewall.py); c.stroke(); c.setLineDash([]);
+    c.fillStyle = 'rgba(255,153,0,0.6)'; c.font = F(7.5); c.textAlign = 'left';
+    c.fillText('PÉRIMÈTRE', 18, N.firewall.py - 5);
+
+    // radar de la sonde
+    const ids = N.ids, sweep = t * 0.9;
+    c.strokeStyle = '#12401f'; c.lineWidth = 1; c.setLineDash([3, 5]); c.lineDashOffset = -t * 5;
+    [44, 70].forEach(r => { c.beginPath(); c.arc(ids.px, ids.py, r, 0, TAU); c.stroke(); });
+    c.setLineDash([]);
+    for (let i = 0; i < 22; i++) {
+      c.fillStyle = 'rgba(0,255,136,' + (0.10 * (1 - i / 22)) + ')';
+      c.beginPath(); c.moveTo(ids.px, ids.py);
+      c.arc(ids.px, ids.py, 70, sweep - (i + 1) * 0.03, sweep - i * 0.03);
+      c.closePath(); c.fill();
+    }
+
+    // liens
+    EDGES.forEach(e => {
+      const A = N[e.a], B = N[e.b];
+      const cut = N.client.isolated && (e.a === 'client' || e.b === 'client');
+      const mirror = e.kind === 'mirror';
+      c.strokeStyle = cut ? ORANGE : (e.bot ? (botsActive ? RED : DIMG) : e.color);
+      c.globalAlpha = mirror ? 0.3 : (cut ? 0.55 : 0.24);
+      c.lineWidth = 1;
+      c.setLineDash(mirror ? [2, 4] : (cut ? [6, 4] : [3, 5]));
+      c.lineDashOffset = mirror ? t * 8 : -t * 8;
+      c.beginPath(); c.moveTo(A.px, A.py); c.lineTo(B.px, B.py); c.stroke();
+    });
+    c.setLineDash([]); c.globalAlpha = 1;
+
+    // paquets
+    for (let k = packets.length - 1; k >= 0; k--) {
+      const p = packets[k];
+      if (p.wait > 0) { p.wait -= dt; continue; }
+      const a = p.path[p.i], b = p.path[p.i + 1];
+      const len = Math.hypot(b.px - a.px, b.py - a.py) || 1;
+      p.d += p.v * dt;
+      if (p.d >= len) { if (!arrive(p, b)) packets.splice(k, 1); continue; }
+      const u = p.d / len, u0 = Math.max(0, (p.d - 16) / len);
+      const x = a.px + (b.px - a.px) * u, y = a.py + (b.py - a.py) * u;
+      const x0 = a.px + (b.px - a.px) * u0, y0 = a.py + (b.py - a.py) * u0;
+      const col = p.color || (edgeOf(a, b) || {}).color || GREEN;
+      const g = c.createLinearGradient(x0, y0, x, y);
+      g.addColorStop(0, 'transparent'); g.addColorStop(1, col);
+      c.globalAlpha = p.mirror ? 0.75 : 1;
+      c.strokeStyle = g; c.lineWidth = p.size; c.lineCap = 'round';
+      c.beginPath(); c.moveTo(x0, y0); c.lineTo(x, y); c.stroke();
+      c.save(); c.shadowColor = col; c.shadowBlur = 8; c.fillStyle = col;
+      c.beginPath(); c.arc(x, y, p.hostile ? 2.7 : p.size, 0, TAU); c.fill(); c.restore();
+      c.globalAlpha = 1;
+    }
+
+    // effets
+    for (let i = rings.length - 1; i >= 0; i--) {
+      const r = rings[i]; r.age += dt * 1.6;
+      if (r.age >= 1) { rings.splice(i, 1); continue; }
+      c.strokeStyle = r.color; c.globalAlpha = 0.8 * (1 - r.age); c.lineWidth = 1.5;
+      c.beginPath(); c.arc(r.x, r.y, 20 + r.age * 34, 0, TAU); c.stroke(); c.globalAlpha = 1;
+    }
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      const sp = sparks[i]; sp.life -= dt * 1.8;
+      if (sp.life <= 0) { sparks.splice(i, 1); continue; }
+      sp.x += sp.vx * dt; sp.y += sp.vy * dt;
+      c.fillStyle = 'rgba(255,34,68,' + sp.life + ')'; c.fillRect(sp.x, sp.y, 2, 2);
+    }
+
+    nodes.forEach(n => drawNode(n, t));
+
+    // libellé du botnet
+    c.font = F(8); c.textAlign = 'center';
+    c.fillStyle = botsActive ? RED : '#3a6649';
+    c.fillText('BOTNET', (N.bot2.px), N.bot2.py + N.bot2.r + 13);
+
+    // charge du serveur web
+    const w = N.web, load = Math.min(1, 0.15 + ddos.k + Math.sin(t * 3) * 0.015);
+    const lc = load > 0.8 ? RED : load > 0.5 ? ORANGE : GREEN;
+    c.fillStyle = 'rgba(255,255,255,0.08)'; c.fillRect(w.px - 19, w.py - w.r - 9, 38, 3);
+    c.fillStyle = lc; c.fillRect(w.px - 19, w.py - w.r - 9, 38 * load, 3);
+    c.font = F(7); c.fillText('CPU ' + Math.round(load * 100) + '%', w.px, w.py - w.r - 12);
+
+    // règle active sur le firewall
+    const tag = ddos.phase === 'limit' ? 'RATE-LIMIT 85%' : ddos.phase === 'block' ? 'BLOCKLIST · 3200 IP'
+              : fw.blocked ? 'BLOCK ' + ATTACKER_IP : '';
+    if (tag) {
+      const f = N.firewall;
+      c.fillStyle = RED; c.globalAlpha = 0.6 + 0.4 * Math.sin(t * 6);
+      c.font = F(7.5); c.textAlign = 'right';
+      c.fillText(tag, f.px - f.r - 8, f.py - 5);
+      c.globalAlpha = 1;
+    }
+    c.textAlign = 'start';
+  }
+
+  function loop(now) { frame(now); raf = requestAnimationFrame(loop); }
+  function start() { if (running || reduce) return; running = true; last = 0; raf = requestAnimationFrame(loop); }
+  function stop() { running = false; cancelAnimationFrame(raf); }
+
+  log('info', 'VEAS IDS  sonde active (TAP firewall + SPAN switch)');
+  if (reduce) { log('ok', 'FIREWALL  politique deny-all — 0 menace'); frame(performance.now()); }
+  else new IntersectionObserver(es => es[0].isIntersecting ? start() : stop()).observe(cv);
+  document.addEventListener('visibilitychange', () => document.hidden ? stop() : (reduce ? 0 : start()));
+})();
+
+// ── FORM SUBMIT (fetch → FormSubmit / Web3Forms, réponse JSON) ──
 const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
-  contactForm.addEventListener('submit', () => {
-    const btn = contactForm.querySelector('.form-submit');
-    btn.textContent = '[ TRANSMISSION EN COURS... ]';
+  const btn = contactForm.querySelector('.form-submit');
+  const status = document.getElementById('formStatus');
+  const label = btn.textContent;
+  const setStatus = (cls, html) => { status.className = 'form-status ' + cls; status.innerHTML = html; };
+
+  // Écran de remerciement
+  const thanks = document.getElementById('formThanks');
+  const thanksText = document.getElementById('thanksText');
+  const thanksLog = document.getElementById('thanksLog');
+  const burst = document.getElementById('thanksBurst');
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let logTimers = [];
+  const logLines = [
+    'Connexion sécurisée établie',
+    'Message chiffré et transmis',
+    'Accusé de réception : Norgil te répond très vite'
+  ];
+  function showThanks(name) {
+    setStatus('', '');
+    thanksText.textContent = '';
+    thanksText.append('Merci ', Object.assign(document.createElement('b'), { textContent: name || 'à toi' }),
+      ', ton message est bien arrivé. Je reviens vers toi très vite.');
+    thanksLog.innerHTML = '';
+    logTimers.forEach(clearTimeout);
+    logTimers = logLines.map((txt, i) => setTimeout(() => {
+      const d = document.createElement('div');
+      d.innerHTML = '<span class="ok">[OK]</span> ';
+      d.append(txt);
+      thanksLog.appendChild(d);
+    }, calm ? 0 : 500 + i * 550));
+    burst.innerHTML = '';
+    if (!calm) {
+      for (let i = 0; i < 22; i++) {
+        const p = document.createElement('i');
+        const a = (i / 22) * Math.PI * 2 + Math.random() * 0.4, r = 70 + Math.random() * 90;
+        p.style.setProperty('--dx', Math.cos(a) * r + 'px');
+        p.style.setProperty('--dy', Math.sin(a) * r + 'px');
+        burst.appendChild(p);
+      }
+    }
+    thanks.classList.add('show');
+    document.getElementById('thanksAgain').focus({ preventScroll: true });
+  }
+  function hideThanks() {
+    thanks.classList.remove('show');
+    logTimers.forEach(clearTimeout);
+    contactForm.elements['name'].focus({ preventScroll: true });
+  }
+  document.getElementById('thanksAgain').addEventListener('click', hideThanks);
+  thanks.querySelector('a').addEventListener('click', () => thanks.classList.remove('show'));
+
+  contactForm.addEventListener('submit', async e => {
+    e.preventDefault();
     btn.disabled = true;
-    setTimeout(() => contactForm.reset(), 0);
+    btn.textContent = '[ TRANSMISSION EN COURS... ]';
+    setStatus('', '');
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 15000);
+    try {
+      const res = await fetch(contactForm.action, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(contactForm),
+        signal: ctrl.signal
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !(data.success === true || data.success === 'true')) throw new Error(data.message || res.status);
+      showThanks(contactForm.elements['name'].value.trim());
+      contactForm.reset();
+      btn.textContent = label;
+    } catch (err) {
+      btn.textContent = label;
+      setStatus('err', 'Échec de l\'envoi. Écris-moi directement : <a href="mailto:oknorgil@gmail.com">oknorgil@gmail.com</a>');
+    } finally {
+      clearTimeout(timer);
+      setTimeout(() => { btn.disabled = false; btn.textContent = label; }, 3500);
+    }
   });
 }
 
