@@ -1,4 +1,4 @@
-<h1 align="center"> >_ OUSSOU Kouame Norgil — <code>Synor</code></h1>
+<h1 align="center"> >_ OUSSOU Kouame Norgil - <code>Synor</code></h1>
 
 <p align="center">
   <img src="profile.jpeg" alt="Photo de profil" width="160" height="160" style="border-radius: 50%; object-fit: cover;" />
