@@ -717,6 +717,64 @@ section {
   padding: 2px 8px; letter-spacing: 0.1em; text-transform: uppercase;
 }
 
+/* ── CV ── */
+#cv { background: var(--bg2); }
+
+.cv-card {
+  display: flex; align-items: center; gap: 28px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 32px;
+  position: relative; overflow: hidden;
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+}
+.cv-card::before {
+  content: '';
+  position: absolute; top: 0; left: -100%;
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+  animation: cvscan 4s linear infinite;
+}
+@keyframes cvscan { to { left: 100%; } }
+
+.cv-icon {
+  flex: none; width: 68px; height: 68px;
+  display: grid; place-items: center;
+  color: var(--green); border: 1px solid var(--border);
+  background: rgba(0,255,136,0.04);
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+.cv-icon .ic { width: 30px; height: 30px; }
+
+.cv-info { flex: 1; min-width: 0; }
+.cv-name {
+  font-family: 'Rajdhani', sans-serif; font-weight: 700;
+  font-size: 1.15rem; color: var(--text);
+}
+.cv-sub { font-size: 0.78rem; color: var(--dim); margin-top: 2px; }
+.cv-status {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 0.68rem; letter-spacing: 0.04em; color: var(--dim); margin-top: 10px;
+}
+.cv-status i { width: 6px; height: 6px; border-radius: 50%; background: var(--dim); flex: none; }
+.cv-status.ready i { background: var(--green); box-shadow: 0 0 8px var(--green); animation: blink 1.4s infinite; }
+.cv-status.ready { color: var(--green); }
+.cv-status.wait i { background: var(--orange); animation: blink 1.4s infinite; }
+.cv-status.wait { color: var(--orange); }
+
+.cv-actions { display: flex; gap: 14px; flex: none; }
+.cv-actions .btn-primary, .cv-actions .btn-secondary { padding: 12px 22px; }
+.cv-actions .ic { width: 13px; height: 13px; margin-right: 6px; vertical-align: -1px; }
+.cv-actions [aria-disabled="true"] {
+  pointer-events: none; opacity: 0.35; border-style: dashed;
+}
+
+@media (max-width: 700px) {
+  .cv-card { flex-direction: column; align-items: flex-start; gap: 22px; padding: 26px 22px; }
+  .cv-actions { width: 100%; }
+  .cv-actions a { flex: 1; text-align: center; }
+}
+
 /* ── CONTACT ── */
 #contact {
   background: var(--bg2);
@@ -1131,6 +1189,8 @@ html.loading .hero-cta, html.loading .hero-stats, html.loading .hero-deco { anim
   <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
   <symbol id="i-radar" viewBox="0 0 24 24"><path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M4 6h.01"/><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/><path d="M12 18h.01"/><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/><circle cx="12" cy="12" r="2"/><path d="m13.41 10.59 5.66-5.66"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></symbol>
 </svg>
 
 <!-- LOADER : séquence de démarrage sécurisé -->
@@ -1198,6 +1258,7 @@ html.loading .hero-cta, html.loading .hero-stats, html.loading .hero-deco { anim
     <a href="#projects">Projets</a>
     <a href="#experience">Expérience</a>
     <a href="#certs">Certifications</a>
+    <a href="#cv">CV</a>
     <a href="#contact">Contact</a>
   </div>
   <div class="nav-status">
@@ -1209,7 +1270,7 @@ html.loading .hero-cta, html.loading .hero-stats, html.loading .hero-deco { anim
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-tag">[ ÉTUDIANT SYSTÈMES &amp; RÉSEAUX · CYBERSÉCURITÉ · DEV ]</div>
+  <div class="hero-tag">[ ÉTUDIANT SRIT · CYBERSÉCURITÉ · DEV ]</div>
   <h1 class="hero-name">
     <span style="color: var(--cyan); font-size: 0.6em; font-weight:400;">Kouamé</span><br>
     <span class="glitch" data-text="NORGIL">NORGIL</span><br>
@@ -1219,7 +1280,7 @@ html.loading .hero-cta, html.loading .hero-stats, html.loading .hero-deco { anim
     <em>Hacker éthique</em> · Architecte réseau · Développeur
   </p>
   <p class="hero-desc">
-    Étudiant en Licence de Systèmes &amp; Réseaux à l'ESATIC, Abidjan.<br>
+    Étudiant en Licence 3 Systèmes, Réseaux Informatique &amp; Télécommunication (SRIT) à l'ESATIC, Abidjan.<br>
     Je construis des systèmes, je casse des défenses, je défends des réseaux.<br>
     La cybersécurité n'est pas juste mon métier — c'est ma passion.
   </p>
@@ -1288,7 +1349,7 @@ html.loading .hero-cta, html.loading .hero-stats, html.loading .hero-deco { anim
           <br>
           <div><span class="t-prompt">→ </span><span class="t-cmd">cat profile.txt</span></div>
           <div class="t-output"><span class="t-comment"># Statut</span></div>
-          <div class="t-output">Étudiant Licence — Systèmes &amp; Réseaux</div>
+          <div class="t-output">Étudiant Licence 3 — SRIT</div>
           <div class="t-output">École : <span class="t-highlight">ESATIC</span>, Abidjan</div>
           <div class="t-output">Rôle  : <span class="t-highlight">Formateur cybersécurité</span></div>
           <br>
@@ -1313,7 +1374,7 @@ html.loading .hero-cta, html.loading .hero-stats, html.loading .hero-deco { anim
         <div class="fact">
           <svg class="ic"><use href="#i-cap"/></svg>
           <div class="fact-val">ESATIC</div>
-          <div class="fact-label">Systèmes &amp; Réseaux</div>
+          <div class="fact-label">SRIT · Licence 3</div>
         </div>
         <div class="fact">
           <svg class="ic"><use href="#i-pin"/></svg>
@@ -1486,30 +1547,41 @@ html.loading .hero-cta, html.loading .hero-stats, html.loading .hero-deco { anim
     <div class="project-card wide">
       <div class="wide-grid">
         <div>
-          <div class="project-badge"><svg class="ic"><use href="#i-globe"/></svg>Live</div>
-          <div class="project-name">CTF-ESATIC Platform</div>
-          <div class="project-sub">Plateforme Capture The Flag du Club Informatique</div>
+          <div class="project-badge"><svg class="ic"><use href="#i-flag"/></svg>CTFd customisé</div>
+          <div class="project-name">ESATIC Training</div>
+          <div class="project-sub">Plateforme CTF du Club Cybersécurité de l'ESATIC</div>
           <div class="project-desc">
-            Plateforme développée et déployée pour le Club Informatique de l'ESATIC. Elle permet aux étudiants
-            de s'entraîner en interne aux challenges de cybersécurité.
+            Plateforme de challenges CTF (solo ou en équipe) et de cours théoriques par domaine pour le Club
+            Cybersécurité de l'ESATIC, tout au long de l'année scolaire. Bâtie sur CTFd, avec une identité
+            visuelle et des animations propres au club.
           </div>
+          <dl class="stack-list">
+            <dt>Base</dt><dd>CTFd 3.8.7 (framework CTF open-source)</dd>
+            <dt>Backend</dt><dd>Python / Flask</dd>
+            <dt>Base de données</dt><dd>MySQL</dd>
+            <dt>Déploiement</dt><dd>Docker Compose · VPS (domaine &amp; HTTPS)</dd>
+          </dl>
           <div class="project-tags">
             <span class="tag">CTF</span>
+            <span class="tag">CTFd</span>
             <span class="tag">Cybersécurité</span>
-            <span class="tag">Web App</span>
-            <span class="tag">Vercel</span>
+            <span class="tag">Python</span>
+            <span class="tag">Docker</span>
+            <span class="tag">MySQL</span>
             <span class="tag">Formation</span>
           </div>
           <div class="project-links">
-            <a href="https://ctf-esatic.vercel.app" target="_blank" class="proj-link" rel="noopener"><svg class="ic"><use href="#i-ext"/></svg>ctf-esatic.vercel.app</a>
+            <a href="https://github.com/5yn0r/CTF-PLATEFORME" target="_blank" class="proj-link" rel="noopener"><svg class="ic"><use href="#i-github"/></svg>github.com/5yn0r/CTF-PLATEFORME</a>
           </div>
         </div>
         <div>
           <div class="feature-title">// Caractéristiques</div>
           <ul class="feature-list">
-            <li><svg class="ic"><use href="#i-check"/></svg><span><b>Challenges variés</b> : forensics, web, cryptographie, reverse engineering</span></li>
-            <li><svg class="ic"><use href="#i-check"/></svg><span><b>Scoring en temps réel</b> et infrastructure complète</span></li>
-            <li><svg class="ic"><use href="#i-check"/></svg><span><b>Usage en formation</b> : déployée pour 50+ étudiants du club</span></li>
+            <li><svg class="ic"><use href="#i-check"/></svg><span><b>Challenges CTF</b> : compétitions en solo ou en équipe</span></li>
+            <li><svg class="ic"><use href="#i-check"/></svg><span><b>Page Modules</b> : cours théoriques organisés par domaine</span></li>
+            <li><svg class="ic"><use href="#i-check"/></svg><span><b>Thème ESATIC</b> : identité visuelle et animation « circuit imprimé » sur mesure</span></li>
+            <li><svg class="ic"><use href="#i-check"/></svg><span><b>Confettis de validation</b> à la résolution d'un challenge</span></li>
+            <li><svg class="ic"><use href="#i-check"/></svg><span><b>Pages légales</b> : CGU et politique de confidentialité</span></li>
           </ul>
         </div>
       </div>
@@ -1625,10 +1697,10 @@ html.loading .hero-cta, html.loading .hero-stats, html.loading .hero-deco { anim
     <div class="timeline-item">
       <div class="timeline-dot"></div>
       <div class="tl-date">09/2024 — Présent</div>
-      <div class="tl-role">Étudiant — Licence Systèmes &amp; Réseaux</div>
+      <div class="tl-role">Étudiant — Licence 3 SRIT</div>
       <div class="tl-org">ESATIC · Abidjan</div>
       <ul class="tl-desc">
-        <li>Réseaux informatiques, cybersécurité, administration système</li>
+        <li>Réseaux informatiques, télécommunications, cybersécurité, administration système</li>
         <li>Électronique, gestion de projet, développement logiciel</li>
       </ul>
     </div>
@@ -1702,10 +1774,32 @@ html.loading .hero-cta, html.loading .hero-stats, html.loading .hero-deco { anim
   </div>
 </section>
 
+<!-- CV -->
+<section id="cv">
+  <div class="section-header">
+    <span class="section-num">05 //</span>
+    <h2 class="section-title">CV</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="cv-card">
+    <div class="cv-icon"><svg class="ic"><use href="#i-file"/></svg></div>
+    <div class="cv-info">
+      <div class="cv-name">Kouamé Norgil Symphorien OUSSOU</div>
+      <div class="cv-sub">Curriculum Vitae — Systèmes, Réseaux &amp; Cybersécurité</div>
+      <div class="cv-status" id="cvStatus"><i></i><span>Vérification de la disponibilité...</span></div>
+    </div>
+    <div class="cv-actions">
+      <a href="cv.pdf" target="_blank" rel="noopener" class="btn-secondary" id="cvView">Voir en ligne</a>
+      <a href="cv.pdf" download="Kouame-Norgil-Oussou-CV.pdf" class="btn-primary" id="cvDownload"><svg class="ic"><use href="#i-download"/></svg>Télécharger</a>
+    </div>
+  </div>
+</section>
+
 <!-- CONTACT -->
 <section id="contact">
   <div class="section-header">
-    <span class="section-num">05 //</span>
+    <span class="section-num">06 //</span>
     <h2 class="section-title">CONTACT</h2>
     <div class="section-line"></div>
   </div>
@@ -2058,6 +2152,34 @@ const navObs = new IntersectionObserver(entries => {
   });
 }, { rootMargin: '-45% 0px -50% 0px' });
 document.querySelectorAll('section[id]').forEach(s => navObs.observe(s));
+
+// ── CV : vérifie que le fichier est bien en ligne avant de proposer les liens ──
+(function () {
+  const status = document.getElementById('cvStatus');
+  const viewBtn = document.getElementById('cvView');
+  const dlBtn = document.getElementById('cvDownload');
+  if (!status) return;
+  const setStatus = (cls, txt) => { status.className = 'cv-status ' + cls; status.querySelector('span').textContent = txt; };
+  const disable = a => { a.setAttribute('aria-disabled', 'true'); a.removeAttribute('href'); a.removeAttribute('download'); };
+
+  fetch(viewBtn.getAttribute('href'), { method: 'HEAD', cache: 'no-store' })
+    .then(res => {
+      const type = res.headers.get('content-type') || '';
+      if (!res.ok || (type && !type.includes('pdf'))) throw new Error('missing');
+      const len = parseInt(res.headers.get('content-length') || '0', 10);
+      const size = !len ? '' : len < 1024 * 1024
+        ? ' · ' + Math.max(1, Math.round(len / 1024)) + ' Ko'
+        : ' · ' + (len / 1024 / 1024).toFixed(1) + ' Mo';
+      setStatus('ready', 'Disponible' + size);
+    })
+    .catch(() => {
+      // hors-ligne, CORS local (file://) ou fichier pas encore déposé : on n'affirme rien à tort,
+      // on désactive juste les liens plutôt que de rediriger vers une page 404
+      if (location.protocol === 'file:') { setStatus('', 'Aperçu local — non vérifiable'); return; }
+      setStatus('wait', 'CV en cours de mise à jour — écris-moi directement');
+      disable(viewBtn); disable(dlBtn);
+    });
+})();
 
 // ── HERO : SIMULATION RÉSEAU ──
 // Architecture : Internet → FIREWALL (périmètre) → { DMZ (web) | LAN (switch → postes, AD, Wi-Fi) }
