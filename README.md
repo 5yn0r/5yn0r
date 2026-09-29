@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com/?lines=Cybersecurity+%7C+Red+Team;Web+Dev+%7C+Modern+Apps;Cloud+%26+Infrastructure;Break+it.+Secure+it.+Repeat.&center=true&width=500&height=45&color=00BFFF&vCenter=true&pause=1000">
+  <img src="https://readme-typing-svg.demolab.com/?lines=Cybersecurity+%7C+CTF+Player;R%C3%A9seaux+%26+Syst%C3%A8mes;Web+Dev+%7C+Modern+Apps;Break+it.+Secure+it.+Repeat.&center=true&width=500&height=45&color=00BFFF&vCenter=true&pause=1000">
 </p>
 
 <p align="center">
@@ -14,16 +14,21 @@
   <a href="mailto:oknorgil@gmail.com"><img src="https://img.shields.io/badge/Email-oknorgil@gmail.com-D14836?style=flat&logo=gmail&logoColor=white"/></a>
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/🟢_Disponible-Stage_académique-2ea44f?style=for-the-badge"/>
+</p>
+
 ---
 
 ##  À propos
 
-Étudiant en informatique passionné par la **cybersécurité offensive** et le **développement d'applications modernes**.  
+Étudiant en Licence 3 **Systèmes, Réseaux Informatique & Télécommunication (SRIT)** à l'ESATIC (Abidjan), passionné par la **cybersécurité offensive** et le **développement d'applications modernes**.
 Je construis des outils, je casse des choses, et je les sécurise ensuite.
 
--  Focus sur la **Red Team**, la sécurité défensive et les CTFs
+-  Focus sur la **cybersécurité offensive/défensive** (CTF, audit réseau) et l'**administration systèmes & réseaux**
 -  Développeur de solutions tech pour des contextes **africains et locaux**
 -  Objectif : maîtriser l'offensive security tout en construisant une stack full-stack solide
+-  🎓 **Actuellement à la recherche d'un stage académique** en Réseaux/Systèmes ou en Cybersécurité — ouvert aux opportunités et collaborations
 
 ---
 
@@ -72,17 +77,21 @@ Je construis des outils, je casse des choses, et je les sécurise ensuite.
 
 ---
 
-##  Projets
+##  Projets phares
 
 | Projet | Description | Stack |
 |--------|-------------|-------|
-| [**ITEtude**](https://github.com/5yn0r/ITEtude) | Curation de ressources pour certifications IT (réseau, cloud, sécu, dev) | Web · Curation |
+| 🌐 [**ITEtude**](https://www.itetude.com) | Plateforme de curation IT — parcours d'apprentissage structurés, recherche assistée par IA, espace communautaire. *Fondateur & développeur.* | Next.js · TypeScript · Firebase · Genkit AI |
+| 📦 [**VEAS Network**](https://github.com/5yn0r/VEAS_NETWORK) | Outil d'observabilité et de détection d'intrusion réseau : découverte d'appareils, capture de trafic, alertes de scan de ports en temps réel | Python · Flask · Scapy · Socket.IO |
+| 📦 [**ESATIC Training**](https://github.com/5yn0r/CTF-PLATEFORME) | Plateforme CTF (CTFd) conçue et déployée pour le club Cybersécurité de l'ESATIC — 50+ étudiants formés | Python · Docker · MySQL |
+| 📦 [**CTF Write-ups**](https://github.com/5yn0r/My-CTF-WritUP-2026) | Résolutions des challenges du SDICTF (Semaine de l'Innovation ESATIC) : reverse engineering mobile, injection SQL, contournement de WAF | Pentest · Web · Mobile |
 
 ---
 
 ## 🎯 Objectifs actuels
 
-- [ ] Approfondir la **cybersécurité offensive** (Red Team, pentest web, AD)
+- [ ] Décrocher un **stage académique** en Réseaux/Systèmes ou en Cybersécurité
+- [ ] Approfondir la **cybersécurité offensive** (pentest web, Active Directory)
 - [ ] Construire un modèle IA local - **Mobio IA** (fine-tuning, souveraineté technologique)
 - [ ] Contribuer à des projets **Open Source** orientés Afrique & sécurité
 
@@ -90,7 +99,7 @@ Je construis des outils, je casse des choses, et je les sécurise ensuite.
 
 ## 🤝 Me contacter
 
-Tu veux collaborer sur un projet open source, une mission sécu, ou juste parler tech ?
+Tu recrutes pour un **stage académique**, tu as une mission sécu/réseau, ou tu veux juste parler tech ?
 
 <p>
   <a href="mailto:oknorgil@gmail.com"><img src="https://img.shields.io/badge/Email-oknorgil@gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white"/></a>
