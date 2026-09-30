@@ -1,4 +1,4 @@
-<h1 align="center"> >_ OUSSOU Kouame Norgil - <code>Synor</code></h1>
+<h1 align="center"> >_ Norgil OUSSOU - <code>Synor</code></h1>
 
 <p align="center">
   <img src="profile.jpeg" alt="Photo de profil" width="160" height="160" style="border-radius: 50%; object-fit: cover;" />
@@ -9,7 +9,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/5yn0r"><img src="https://komarev.com/ghpvc/?username=5yn0r&label=Profile+views&color=0e75b6&style=flat" alt="views"/></a>
   <a href="https://www.linkedin.com/in/kouame-oussou"><img src="https://img.shields.io/badge/LinkedIn-kouame__oussou-0077B5?style=flat&logo=linkedin&logoColor=white"/></a>
   <a href="mailto:oknorgil@gmail.com"><img src="https://img.shields.io/badge/Email-oknorgil@gmail.com-D14836?style=flat&logo=gmail&logoColor=white"/></a>
 </p>
@@ -28,7 +27,7 @@ Je construis des outils, je casse des choses, et je les sécurise ensuite.
 -  Focus sur la **cybersécurité offensive/défensive** (CTF, audit réseau) et l'**administration systèmes & réseaux**
 -  Développeur de solutions tech pour des contextes **africains et locaux**
 -  Objectif : maîtriser l'offensive security tout en construisant une stack full-stack solide
-- **Actuellement à la recherche d'un stage académique** en Réseaux/Systèmes ou en Cybersécurité — ouvert aux opportunités et collaborations
+- **Actuellement à la recherche d'un stage académique** en Réseaux/Systèmes ou en Cybersécurité. Je suis ouvert aux opportunités et collaborations
 
 ---
 
@@ -81,7 +80,7 @@ Je construis des outils, je casse des choses, et je les sécurise ensuite.
 
 | Projet | Description | Stack |
 |--------|-------------|-------|
-|  [**ITEtude**](https://www.itetude.com) | Plateforme de curation IT — parcours d'apprentissage structurés, recherche assistée par IA, espace communautaire. *Fondateur & développeur.* | Next.js · TypeScript · Firebase · Genkit AI |
+|  [**ITEtude**](https://www.itetude.com) | Plateforme de curation IT . Parcours d'apprentissage structurés, recherche assistée par IA, espace communautaire. *Fondateur & développeur.* | Next.js · TypeScript · Firebase · Genkit AI |
 |  [**VEAS Network**](https://github.com/5yn0r/VEAS_NETWORK) | Outil d'observabilité et de détection d'intrusion réseau : découverte d'appareils, capture de trafic, alertes de scan de ports en temps réel | Python · Flask · Scapy · Socket.IO |
 |  [**ResteFocus**](https://github.com/5yn0r/ResteFocus) | Bloqueur d'application pendant vos sections d'études : Détecte vos réseaux sociaux,et les bloque. Résolvez des problèmes Math Gate pour débloquer | Dart · Flutter · Kotlin · AndroidSys |
 |  [**ESATIC Training**](https://github.com/5yn0r/CTF-PLATEFORME) | Plateforme CTF (CTFd) conçue et déployée pour le club Cybersécurité de l'ESATIC — 50+ étudiants formés | Python · Docker · MySQL |
