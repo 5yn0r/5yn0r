@@ -81,7 +81,7 @@ Je construis des outils, je casse des choses, et je les sécurise ensuite.
 | Projet | Description | Stack |
 |--------|-------------|-------|
 |  [**ITEtude**](https://www.itetude.com) | Plateforme de curation IT . Parcours d'apprentissage structurés, recherche assistée par IA, espace communautaire. *Fondateur & développeur.* | Next.js · TypeScript · Firebase · Genkit AI |
-|  [**VEAS Network**](https://github.com/5yn0r/VEAS_NETWORK) | Outil d'observabilité et de détection d'intrusion réseau : découverte d'appareils, capture de trafic, alertes de scan de ports en temps réel | Python · Flask · Scapy · Socket.IO |
+|  [**VEAS RÉSEAUX**](https://github.com/5yn0r/VEAS-RÉSEAUX) | Outil d'observabilité et de détection d'intrusion réseau : découverte d'appareils, capture de trafic, alertes de scan de ports en temps réel | Python · Flask · Scapy · Socket.IO |
 |  [**ResteFocus**](https://github.com/5yn0r/ResteFocus) | Bloqueur d'application pendant vos sections d'études : Détecte vos réseaux sociaux,et les bloque. Résolvez des problèmes Math Gate pour débloquer | Dart · Flutter · Kotlin · AndroidSys |
 |  [**ESATIC Training**](https://github.com/5yn0r/CTF-PLATEFORME) | Plateforme CTF (CTFd) conçue et déployée pour le club Cybersécurité de l'ESATIC — 50+ étudiants formés | Python · Docker · MySQL |
 |  [**CTF Write-ups**](https://github.com/5yn0r/My-CTF-WritUP-2026) | Résolutions des challenges du SDICTF (Semaine de l'Innovation ESATIC) : reverse engineering mobile, injection SQL, contournement de WAF | Pentest · Web · Mobile |
